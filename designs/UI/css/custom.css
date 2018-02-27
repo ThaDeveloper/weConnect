@@ -44,3 +44,34 @@ h4{
 .panel:hover{
     background: rgba(0,0,0,0.7);
 }
+/* .label{
+    position: absolute;
+    top: 10px;
+    left: -20px;
+    width: 130px;
+    height:40px;
+    line-height: 35px;
+    color: #fff;
+    transform: rotate(-20deg);
+    background: #E419B7;
+    box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+}
+.label2{
+    position: absolute;
+    top: 0px;
+    left: -18px;
+    width: 130px;
+    height:40px;
+    line-height: 35px;
+    color: #fff;
+    transform: rotate(-27deg);
+    background: #8E4E81;
+    z-index: -1;
+} */
+.btn-success{
+    border: 0px;
+    border-radius: 0px;
+}
+label a{
+    color: white;
+}
