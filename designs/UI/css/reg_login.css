@@ -1,0 +1,35 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: url("../images/business_network.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: sans-serif;
+}
+
+.panel{
+    border: 0px;
+    background: rgba(0,0,0,0.7);
+    color: #ffff;
+    text-align: center;
+    padding-top: 50px;
+    transition: 1s;
+}
+h4{
+   margin: 0;
+   padding: 0;
+   color: #F9DF05;
+
+}
+
+.panel:hover{
+    background: rgba(0,0,0,0.7);
+}
+.btn-success{
+    border: 0px;
+    border-radius: 0px;
+}
+label a{
+    color: white;
+}
