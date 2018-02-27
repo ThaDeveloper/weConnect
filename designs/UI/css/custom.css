@@ -14,10 +14,33 @@ body{
     color: #ffff;
     text-align: center;
     padding-top: 50px;
+    transition: 1s;
 }
 h4{
    margin: 0;
    padding: 0;
    color: #F9DF05;
 
+}
+/* .avatar{
+    position: absolute;
+    top: -50px;
+    width: 100px;
+    height: 100px;
+    line-height: 112px;
+    text-align: center;
+    left: 37%;
+    background: linear-gradient(darkslategray, Cyan);
+    background: -webkit-linear-gradient(darkslategray, Cyan);
+    background: -moz-linear-gradient(darkslategray, Cyan);
+    border: 3px outset #F4E10A;
+    -webkit-border-radius: 100%;
+    -moz-border-raidus: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    border-radius: 100%;
+    color: #ffff;
+} */
+.panel:hover{
+    background: rgba(0,0,0,0.7);
 }
