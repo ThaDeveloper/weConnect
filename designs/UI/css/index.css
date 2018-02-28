@@ -6,7 +6,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Source Sans Pro', sans-serif;
-	background: url("../images/business.jpg");
+	background: url("../images/business_network.jpg");
 	-webkit-font-smoothing: antialiased;
   	-moz-osx-font-smoothing: grayscale;
 }
@@ -119,6 +119,11 @@ body {
 	font-size: 14px;
 	font-weight: 600;
 }
+.panel{
+	margin-left: 50px;
+	margin-top: 20px;
+	margin-right: 100px;
+}
 /* main content styles */
 .main-content {
 	padding: 40px;
@@ -126,16 +131,19 @@ body {
 	padding: 0;
 	padding-top: 44px;
 	height: 100%;
-	overflow: scroll;
+	/* overflow: scroll; */
 }
-.main-content .title {
-	background-color: #eef1f7;
-	border-bottom: 1px solid #b8bec9;
-	padding: 10px 20px;
-	font-weight: 700;
-	color: #333;
-	font-size: 18px;
+
+.row{
+	margin-left: 20px;
 }
+.row .col-lg-4 {
+	border: 1px solid rgb(25, 0, 255);
+	border-radius: 5px;
+	margin: 5px;
+}
+
+
 /* set element styles to fit tablet and higher(desktop) */
 @media screen and (min-width: 600px) {
 	.header {
@@ -172,9 +180,9 @@ body {
 	.side-nav ul li a {
 		text-align: center;
 	}
-	.main-content {
+	/* .main-content {
 		margin-left: 70px;
-	}
+	} */
 }
 /* set element styles for desktop */
 @media screen and (min-width: 800px) {
@@ -207,27 +215,10 @@ body {
 }
 
 /* main box container */
-.main {
+/* .main {
 	display: flex;
 	flex-flow: row wrap;
-}
-.widget {
-	flex-basis: 300px;
-	flex-grow: 10;
-	height: 300px;
-	margin: 15px;
-	border-radius: 6px;
-	background-color: #ffffff;
-	position: relative;
-}
-.widget .title {
-	background-color: #eef1f7;
-	border-bottom: 1px solid #dfe4ec;
-	padding: 10px;
-	border-top-left-radius: 6px;
-	border-top-right-radius: 6px;
-	color: #617085;
-	font-weight: 600;
-}
+} */
+
 
 

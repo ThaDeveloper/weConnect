@@ -5,11 +5,13 @@
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>weConect - Dashboard</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+    	<link rel="stylesheet" href="css/bootstrap-theme.min.css">	
 		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:700, 600,500,400,300' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="css/index.css">
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-		<script src="js/main.js"></script>
+		
+		
 	</head>
 	<body>
 		<div class="header">
@@ -70,25 +72,98 @@
 			</nav>
 		</div>
 		<div class="main-content">
-			<div class="title">
-				Business profiles
-			</div>
-			
-			<div class="main">
-				<div class="widget">
-					<div class="title">A</div>
-					<div class="widget-body"></div>
+			<div class="container">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<label>Business Profiles</label>
+						<!-- Button trigger modal -->
+						<button type="button" class="btn btn-info pull-right" data-toggle="modal" data-target="#addbusiness">
+								Add Business
+						</button>
+					</div>
+					<div class="panel-body">
+						<!-- Modal -->
+						<div class="modal fade" id="addbusiness" tabindex="-1" role="dialog" aria-labelledby="addbusiness" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+								<h5 class="modal-title" id="addbusiness">Add a Business</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								</div>
+								<div class="modal-body">
+									<form action="">
+										<div class="form-group">
+											<input type="text" name="name" class="form-control"
+												placeholder="Enter Name...">
+										</div><!--form-group-->
+										<div class="form-group">
+											<textarea class="form-control" name="description" id="description" rows="3" placeholder="Enter Description..."></textarea>
+										</div><!--form-group-->
+										<div class="form-group">
+												<input type="text" name="location" class="form-control"
+													placeholder="Enter Location...">
+											</div><!--form-group-->
+										<div class="form-group">
+											<label for="Business Category">Business Category</label>
+											<select multiple class="form-control" id="business_category">
+												<option>Consumer goods</option>
+												<option>Electronics</option>
+												<option>Clothing</option>
+												<option>Groceries</option>
+												<option>Services</option>
+											</select>
+										</div>
+										
+												
+									</form><!--form-->
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary">Create</button>
+								</div>
+							</div>
+							</div>
+						</div><!--modal-->
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-6">
+								<div class="biz-header"></div>
+								<div class="biz-body">
+									hdhdhd
+								</div>
+								<div class="biz-footer">
+
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-6">
+									<div class="biz-header"></div>
+									<div class="biz-body">
+											hdhdhd
+									</div>
+									<div class="biz-footer">
+	
+									</div>
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-6">
+								<div class="biz-header"></div>
+								<div class="biz-body">
+										hdhdhd
+								</div>
+								<div class="biz-footer">
+		
+								</div>
+							</div>
+						</div>
+
+					</div><!--panel-body-->
 				</div>
-				<div class="widget">
-					<div class="title">B</div>
-					<div class="widget-body"></div>
-				</div>
-				<div class="widget">
-					<div class="title">C</div>
-					<div class="widget-body"></div>
-				</div>
+				
 			</div>
 		</div>
-
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ 		 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="js/main.js"></script>
 	</body>
 </html>
