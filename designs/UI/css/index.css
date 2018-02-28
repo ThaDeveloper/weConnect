@@ -24,6 +24,11 @@ body {
 	padding: 10px;
 	font-weight: 700;
 }
+
+.logo a {
+	text-decoration: none;
+	color: white;
+}
 .header .logo {
 	color: #233245;
 }
@@ -109,6 +114,14 @@ body {
 	display: block;
 	text-decoration: none;
 }
+
+.side-nav ul li:hover {
+	background-color: rgb(65, 73, 119);
+}
+.side-nav ul li a span:hover {
+	text-decoration: underline;
+}
+
 .side-nav ul li i {
 	color: #0a0a0a;
 	min-width: 20px;
@@ -229,5 +242,20 @@ body {
 	color: #617085;
 	font-weight: 600;
 }
-
-
+.widget .widget-footer {
+	background-color: #eef1f7;
+	border-bottom: 1px solid #dfe4ec;
+	padding: 10px;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	color: #617085;
+	font-weight: 600;
+	position: absolute;
+	width: 505px;
+	margin-top: 76px;
+}
+p{
+	font-family: sans-serif;
+	font-size: 1.2em;
+	padding: 10px;
+}
