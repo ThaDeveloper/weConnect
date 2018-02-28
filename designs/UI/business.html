@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>weConect - Dashboard</title>
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:700, 600,500,400,300' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/index.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	    <script src="js/main.js"></script>
+	</head>
+	<body>
+		<div class="header">
+			<div class="logo">
+				<a href="index.html">
+					<i class="fa fa-connectdevelop"></i>
+					<span>weConnect</span>
+				</a>
+			</div>
+			<a href="#" class="nav-trigger"><span></span></a>
+		</div>
+		<div class="side-nav">
+			<div class="logo">
+				<a href="index.html">
+					<i class="fa fa-connectdevelop"></i>
+					<span>weConnect</span>
+				</a>
+			</div>
+			<nav>
+				<ul>
+					<li class="active">
+						<a href="index.html">
+							<span><i class="fa fa-briefcase"></i></span>
+							<span>Business</span>
+						</a>
+					</li>
+					
+					<li>
+						<!-- if admin?-->
+						<a href="users.html">
+							<span><i class="fa fa-users"></i></span>
+							<span>Users</span>
+						</a>
+						<!---->
+					</li>
+					<li>
+						<!--if loggedin?-->
+						<a href="account.html">
+							<span><i class="fa fa-user"></i></span>
+							<span>Account</span>
+						</a>
+						<!---->
+					</li>
+					<li>
+						<a href="login.html">
+							<span><i class="fa fa-sign-in"></i></span>
+							<span>Login</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+        </div>
+        <div class="main-content">
+                <div class="title">
+                    <label>Business Profile</label><!-- Button trigger modal -->
+                    
+                </div>
+                <div class="panel-body">
+                       
+                <div class="main">
+                    <div class="container">
+                        <div class="panel panel-default">
+                            <div class="panel-heading text-center"><label>Google</label></div>
+                            <div class="panel-body">
+                                <p>
+                                    Dope ipsum dolizzle sit phat, consectetuer adipiscing elizzle.
+                                    Nullizzle get down get down velizzle, hizzle volutpizzle, 
+                                    owned the bizzle, away vizzle, dang. Pellentesque eget tortor. 
+                                    sizzle. Fusce izzle dolizzle dapibizzle break yo neck, yall tempus tempor
+                                </p>
+                                <p>
+                                     Dope ipsum dolizzle sit phat, consectetuer adipiscing elizzle.
+                                    Nullizzle get down get down velizzle, hizzle volutpizzle, 
+                                    owned the bizzle, away vizzle, dang. Pellentesque eget tortor. 
+                                    sizzle. Fusce izzle dolizzle dapibizzle break yo neck, yall tempus tempor
+                                </p>
+                                <p>
+                                    Dope ipsum dolizzle sit phat, consectetuer adipiscing elizzle.
+                                    Nullizzle get down get down velizzle, hizzle volutpizzle, 
+                                    owned the bizzle, away vizzle, dang. Pellentesque eget tortor. 
+                                    sizzle. Fusce izzle dolizzle dapibizzle break yo neck, yall tempus tempor
+                                </p>
+                                <p><a href="#reviews" data-toggle="collapse">Reviews</a></p>
+                                <div id="reviews" class="collapse">
+
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        <label>Reviewed by Justin on <em>28th, Feb, 2018</em></label>
+                                        <hr>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        <label>Reviewed by Morty on <em>29th, Feb, 3100</em></label>
+                                        <hr>
+                                        <form action="">
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="review_message"  rows="3" placeholder="Enter Review Message..."></textarea>
+                                            </div><!--form-group-->
+                                            <div class="form-group">
+                                                <input type="submit" name="review_button" class="btn btn-info btn-lg"
+                                                value="Review">
+                                            </div><!--form-group-->
+                                         </form><!--form-->
+
+                                </div>
+                            </div>
+                            <div class="panel-footer text-center">
+                                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addbusiness">
+                                    <i class="fa fa-plus"></i> Edit 
+                                </button>
+                            </div>
+                        </div>
+                     
+                    </div>
+                </div>
+            </div>
+            
+        </body>
+    </html>
