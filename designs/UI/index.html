@@ -10,7 +10,8 @@
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="css/index.css">
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="js/main.js"></script>
 	</head>
 	<body>
@@ -66,11 +67,21 @@
 		</div>
 		<div class="main-content">
 			<div class="title">
-				<label>Business profiles</label><!-- Button trigger modal -->
-				<button type="button" class="btn btn-info pull-right" data-toggle="modal" data-target="#addbusiness">
-						<i class="fa fa-plus"></i> Add Business
-				</button>
+				<div class="row">
+					<div class="col-md-4">
+						<label pu>Business profiles</label><!-- Button trigger modal -->
+					</div>
+					<div class="col-md-4">
+						<input class="form-control" type="text" placeholder="Search" aria-label="Search">
+					</div>
+					<div class="col-md-4">
+						<button type="button" class="btn btn-info pull-right" data-toggle="modal" data-target="#addbusiness">
+							<i class="fa fa-plus"></i> Add Business
+						</button>
+					</div>
+				</div>
 			</div>
+			
 			<div class="panel-body">
 					<!-- Modal -->
 					<div class="modal fade" id="addbusiness" tabindex="-1" role="dialog" aria-labelledby="addbusiness" aria-hidden="true">
@@ -110,8 +121,8 @@
 									</form><!--form-->
 								</div>
 								<div class="modal-footer">
-									<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-info">Create</button>
+									<button type="button" class="btn btn-warning btn-lg" data-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-info btn-lg">Create</button>
 								</div>
 							</div>
 						</div>
@@ -161,7 +172,6 @@
 				</div>
 			</div>
 		</div>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		
 	</body>
 </html>
