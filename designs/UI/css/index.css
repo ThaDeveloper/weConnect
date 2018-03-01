@@ -248,11 +248,14 @@ body {
 	padding: 10px;
 	border-bottom-left-radius: 6px;
 	border-bottom-right-radius: 6px;
-	color: #617085;
-	font-weight: 600;
 	position: absolute;
+	/* add */
 	width: 505px;
 	margin-top: 76px;
+	bottom:0px;
+	width: 100%;
+	margin: 0;
+	height: 70px;/* or however high you would like */
 }
 p{
 	font-family: sans-serif;
@@ -260,5 +263,21 @@ p{
 	padding: 10px;
 }
 .search{
-	width: 300px;
+	width: 100%;
 }
+.widget-body{
+	padding: 20px;
+}
+
+img {
+	width:150px;
+	height:150px;
+    -webkit-transition: all .3s ease-out;
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+transition: all .3s ease-out;
+
+}
+img:hover {
+        transform: scale(1.075);
+    }
