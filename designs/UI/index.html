@@ -46,7 +46,6 @@
 							<span><i class="fa fa-users"></i></span>
 							<span>Users</span>
 						</a>
-						<!---->
 					</li>
 					<li>
 						<!--if loggedin?-->
@@ -54,13 +53,21 @@
 							<span><i class="fa fa-user"></i></span>
 							<span>Account</span>
 						</a>
-						<!---->
 					</li>
 					<li>
+						<!--else-->
 						<a href="login.html">
 							<span><i class="fa fa-sign-in"></i></span>
 							<span>Login</span>
 						</a>
+						
+					</li>
+					<li>
+						<a href="register.html">
+							<span><i class="fa fa-registered"></i></span>
+							<span>Register</span>
+						</a>
+						<!---->
 					</li>
 				</ul>
 			</nav>
@@ -72,7 +79,14 @@
 						<label pu>Business Profiles</label>
 					</div>
 					<div class="col-md-4">
-						<input class="form-control" type="text" placeholder="Search" aria-label="Search">
+						<form method="post" action="" class="search">
+						    <div class="input-group">
+							    <input type="text" class="form-control" name="search" size="60" placeholder="Enter Business Name, Location or Category">
+							    <span class="input-group-btn">
+							        <button class="btn btn-info"><i class="fa fa-search"></i></button>
+							    </span>
+							</div>
+						</form> 
 					</div>
 					<div class="col-md-4">
 						<button type="button" class="btn btn-info pull-right" data-toggle="modal" data-target="#addbusiness">
@@ -131,43 +145,34 @@
 				<div class="widget">
 					<div class="title">Google</div>
 					<div class="widget-body">
-						<p>
-						Dope ipsum dolizzle sit phat, consectetuer adipiscing elizzle.
-						 Nullizzle get down get down velizzle, hizzle volutpizzle, 
-						owned the bizzle, away vizzle, dang. Pellentesque eget tortor. 
-						sizzle. Fusce izzle dolizzle dapibizzle break yo neck, yall tempus tempor
-					   </p>
+						<div class="text-center">
+							<img src="images/google.png" class="img-fluid" alt="Google, Inc. Logo">
+						</div>
 					</div>
 					<div class="widget-footer">
-						<a role="button" href="business.html" class="btn btn-warning pull-left">View Profile</a>
+						<a role="button" href="business.html" class="btn btn-warning btn-lg spull-left">View Profile</a>
 					</div>
 				</div>
 				<div class="widget">
 					<div class="title">Amazon</div>
 					<div class="widget-body">
-						<p>
-						Dope ipsum dolizzle sit phat, consectetuer adipiscing elizzle.
-						Nullizzle get down get down velizzle, hizzle volutpizzle, 
-						owned the bizzle, away vizzle, dang. Pellentesque eget tortor. 
-						sizzle. Fusce izzle dolizzle dapibizzle break yo neck, yall tempus tempor
-						</p>
+							<div class="text-center">
+									<img src="images/amazon.png" class="img-fluid" alt="Amazon, Inc. Logo">
+								</div>
 					</div>
 					<div class="widget-footer">
-						<a role="button" href="business.html" class="btn btn-warning pull-left">View Profile</a>
+						<a role="button" href="business.html" class="btn btn-warning btn-lg pull-left">View Profile</a>
 					</div>
 				</div>
 				<div class="widget">
 					<div class="title">Apple</div>
 					<div class="widget-body">
-						<p>
-						Dope ipsum dolizzle sit phat, consectetuer adipiscing elizzle.
-						Nullizzle get down get down velizzle, hizzle volutpizzle, 
-						owned the bizzle, away vizzle, dang. Pellentesque eget tortor. 
-						sizzle. Fusce izzle dolizzle dapibizzle break yo neck, yall tempus tempor
-						</p>
+						<div class="text-center">
+							<img src="images/apple.png" class="img-fluid" alt="Apple, Inc. Logo">
+						</div>
 					</div>
 					<div class="widget-footer">
-						<a role="button" href="business.html" class="btn btn-warning pull-left">View Profile</a>
+						<a role="button" href="business.html" class="btn btn-warning btn-lg pull-left">View Profile</a>
 					</div>
 				</div>
 			</div>
