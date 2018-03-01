@@ -280,4 +280,13 @@ transition: all .3s ease-out;
 }
 img:hover {
         transform: scale(1.075);
-    }
+	}
+#business_profile{
+	background-color: #f1f2f3;
+}
+#reviews .panel{
+	padding: 20px;
+}
+#business_profile .panel:nth-child(2){
+	padding: 20px;	
+}
