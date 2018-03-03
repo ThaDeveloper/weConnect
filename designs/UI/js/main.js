@@ -6,12 +6,4 @@ $(document).ready(function() {
 
 });
 
-// $(document).ready(function() {
-// ('nav').hide();
-// ('.nav-trigger').click(function(){
-// 	('nav').slideToggle("slow", function(){
-// 		('nav-trigger').hide()
-// 	});
-// });
 
-// });
