@@ -14,6 +14,57 @@ class TestBusinessClassFunctionality(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.business_id = 1
+        self.app.post("/api/auth/register",
+                         data=json.dumps(dict(username="username",
+                                              password="pass")),
+                         content_type="application/json")
+
+        response = self.app.post("/api/auth/login",
+                                    data=json.dumps(dict(username="username",
+                                                    password="pass")),
+                                    content_type="application/json")
+        response_msg = json.loads(response.data)
+        self.token = response_msg["Token"]
+
+    def test_business_access_with_invalid_token(self):
+        """Raise unauthorized error invalid token."""
+        response = self.app.post("/api/businesses/",
+                                    data=json.dumps(dict(name="business")),
+                                    content_type="application/json",
+                                    headers={"Authorization": "Token " + "invalid"})
+        self.assertEqual(response.status_code, 401)
+
+    def test_add_new_business(self):
+        """Tests creating a new business."""
+        response = self.app.post("/api/businesses/",
+                                    data=json.dumps(dict(name="business")),
+                                    content_type="application/json",
+                                    headers={"Authorization": "Token " + self.token})
+        self.assertEqual(response.status_code, 201)
+        response_msg = json.loads(response.data)
+        self.assertIn("Business", response_msg["Message"])
+
+    def test_invalid_name(self):
+        """Error raised for blank business name. A business must have  a name."""
+        response = self.app.post("/api/businesses/",
+                                    data=json.dumps(dict(name="")),
+                                    content_type="application/json",
+                                    headers={"Authorization": "Token " + self.token})
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data)
+        self.assertIn("A business must have a name", response_msg["Message"])
+
+    def test_duplicates_prevented(self):
+        """
+        Error raised for duplicate business names.
+        """
+        response = self.app.post("/api/businesses/",
+                                    data=json.dumps(dict(name="business_name")),
+                                    content_type="application/json",
+                                    headers={"Authorization": "Token " + self.token})
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data)
+        self.assertIn("already exists", response_msg["Message"])
 
     def test_business_list(self):
         resp = self.app.get('/api/businesses')
@@ -46,9 +97,89 @@ class TestBusinessClassFunctionality(unittest.TestCase):
         })
     
     def test_business_detail_404(self):
-        resp = self.app.get('api/businesses/222')
+        resp = self.app.get('/api/businesses/222')
         self.assertEqual(resp.status_code, 404)
     
+
+    def test_invalid_business_request(self):
+        """
+        Error raised for invalid business request.
+        """
+        response = self.app.get("/api/businesses/3",
+                                   content_type="application/json",
+                                   headers={'Authorization': 'Token ' + self.token})
+        self.assertEqual(response.status_code, 404)
+        response_msg = json.loads(response.data)
+        self.assertIn("not found", response_msg["Message"])
+
+    def test_update_business(self):
+        """Tests a business can be updated."""
+        response = self.app.put("/api/businesses/2",
+                                   data=json.dumps(dict(name="updated_name")),
+                                   content_type="application/json",
+                                   headers={'Authorization': 'Token ' + self.token})
+        self.assertEqual(response.status_code, 200)
+        response_msg = json.loads(response.data)
+        self.assertIn("New_Name", response_msg["Message"])
+
+    def test_invalid_update(self):
+        """Error raised for invalid update request."""
+        response = self.app.put("/api/businnesses/3",
+                                   data=json.dumps(dict(name="updated_name")),
+                                   content_type="application/json",
+                                   headers={'Authorization': 'Token ' + self.token})
+        self.assertEqual(response.status_code, 404)
+        response_msg = json.loads(response.data)
+        self.assertIn("not found", response_msg["Message"])    
+
+    def test_delete_business(self):
+        """Tests business deletion."""
+        response = self.app.delete("/api/businesses/1",
+                                      content_type="application/json",
+                                      headers={'Authorization': 'Token ' + self.token})
+        self.assertEqual(response.status_code, 200)
+        response_msg = json.loads(response.data)
+        self.assertIn("deleted", response_msg["Message"])
+
+    def test_invalid_delete(self):
+        """Error raised for invalid delete request."""
+        response = self.app.delete("/api/businesses/3",
+                                      content_type="application/json",
+                                      headers={'Authorization': 'Token ' + self.token})
+        self.assertEqual(response.status_code, 404)
+        response_msg = json.loads(response.data)
+        self.assertIn("not found", response_msg["Message"])
+
+    def test_duplicate_updates(self):
+        """
+        Tests for updating business to a name that already exists.
+         """
+        response = self.app.put("/api/businesses/1",
+                                   data=json.dumps(dict(name="testbusiness")),
+                                   content_type="application/json",
+                                   headers={"Authorization": "Token " + self.token})
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data)
+        self.assertIn("already exists", response_msg["Message"])
+
+    def test_search_by_business_name(self):
+        """Tests user can search for business."""
+        response = self.app.get("/api/businesses/?q=testbusiness",
+                                   content_type="application/json",
+                                   headers={'Authorization': 'Token ' + self.token})
+        self.assertEqual(response.status_code, 200)
+        response_msg = json.loads(response.data)
+        self.assertEqual("testbusiness", response_msg["Businesses"][0]["name"])
+
+    def test_invalid_search(self):
+        """ Tests for invalid business search."""
+        response = self.app.get("/api/businesses/?q=invalid",
+                                   content_type="application/json",
+                                   headers={'Authorization': 'Token ' + self.token})
+        self.assertEqual(response.status_code, 404)
+        response_msg = json.loads(response.data)
+        self.assertIn("not found", response_msg["Message"])
+
 #makes tests executable
 if __name__ == "__main__":
     unittest.main()
