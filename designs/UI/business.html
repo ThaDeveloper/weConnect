@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>weConect - Business Profile</title>
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:700, 600,500,400,300' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	    <script src="js/main.js"></script>
+	</head>
+	<body>
+		<div class="header">
+			<div class="logo">
+				<a href="index.html">
+					<i class="fa fa-connectdevelop"></i>
+					<span>weConnect</span>
+				</a>
+			</div>
+			<a href="#" class="nav-trigger"><span></span></a>
+		</div>
+		<div class="side-nav">
+			<div class="logo">
+				<a href="index.html">
+					<i class="fa fa-connectdevelop"></i>
+					<span>weConnect</span>
+				</a>
+			</div>
+			<nav>
+				<ul>
+					<li class="active">
+						<a href="index.html">
+							<span><i class="fa fa-briefcase"></i></span>
+							<span>Businesses</span>
+						</a>
+					</li>
+					
+					<li>
+                            <!-- if admin?-->
+                        <a href="">
+                            <span><i class="fa fa-users"></i></span>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li>
+                        <!--if loggedin?-->
+                        <a href="">
+                            <span><i class="fa fa-user"></i></span>
+                            <span>Account</span>
+                        </a>
+                    </li>
+                    <li>
+                        <!--else-->
+                        <a href="login.html">
+                            <span><i class="fa fa-sign-in"></i></span>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="register.html">
+                            <span><i class="fa fa-registered"></i></span>
+                            <span>Register</span>
+                         </a>
+                            <!---->
+                    </li>
+				</ul>
+			</nav>
+        </div>
+        <div class="main-content">
+                <div class="title">
+                    <label>Business Profile</label><!-- Button trigger modal -->
+               </div>
+                <div class="panel-body">
+                        <!-- Modal -->
+                        <div class="modal fade" id="addbusiness" tabindex="-1" role="dialog" aria-labelledby="addbusiness" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="addbusiness">Update Your Business</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="">
+                                            <div class="form-group">
+                                                <input type="text" name="name" class="form-control"
+                                                    placeholder="Enter Name...">
+                                            </div><!--form-group-->
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Enter Description..."></textarea>
+                                            </div><!--form-group-->
+                                            <div class="form-group">
+                                                    <input type="text" name="location" class="form-control"
+                                                        placeholder="Enter Location...">
+                                                </div><!--form-group-->
+                                            <div class="form-group">
+                                                <label for="Business Category">Business Category</label>
+                                                <select multiple class="form-control" id="business_category">
+                                                    <option>Consumer goods</option>
+                                                    <option>Electronics</option>
+                                                    <option>Clothing</option>
+                                                    <option>Groceries</option>
+                                                    <option>Services</option>
+                                                </select>
+                                            </div>
+                                        </form><!--form-->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning btn-lg" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-info btn-lg">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--modal-->
+                <div class="main">
+                    <div class="container">
+                        <div class="panel panel-default">
+                            <div class="panel-heading text-center">
+                                <a role="button" href="index.html" class="btn btn-default btn-lg pull-left" data-toggle="tooltip" title="Go Back">
+                                <i class="fa fa-chevron-circle-left"></i>Back
+                                </a>
+                                <h2>Google</h2>
+                            </div>
+                            <div class="panel-body" id="business_profile">
+                                <div class="panel">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                                <div class="text-center">
+                                                        <img src="images/google.png" class="img-fluid" alt="Google, Inc. Logo">
+                                                </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h3>Overview</h3>
+                                            <p><strong>Location: </strong>San Francisco, CA</p>
+                                            <p><strong>Category: </strong>Technology
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <h4 class="text-center">About</h4>
+                                    <p>
+                                            Dope ipsum dolizzle sit phat, consectetuer adipiscing elizzle.
+                                            Nullizzle get down get down velizzle, hizzle volutpizzle, 
+                                            owned the bizzle, away vizzle, dang. Pellentesque eget tortor. 
+                                            sizzle. Fusce izzle dolizzle dapibizzle break yo neck, yall tempus tempor
+                                        
+                                             Dope ipsum dolizzle sit phat, consectetuer adipiscing elizzle.
+                                            Nullizzle get down get down velizzle, hizzle volutpizzle, 
+                                            owned the bizzle, away vizzle, dang. Pellentesque eget tortor. 
+                                            sizzle. Fusce izzle dolizzle dapibizzle break yo neck, yall tempus tempor
+                                        </p>
+                                </div>
+                                <p><a href="#reviews" data-toggle="collapse">Reviews</a></p>
+                                <div id="reviews" class="collapse">
+                                    <div class="panel">
+                                        <h4><strong>Great Tech</strong></h4>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        <label>Reviewed by Justin on <em>28th, Feb, 2018</em></label>
+                                        <hr>
+                                        <h4><strong>Awesome place to work</strong></h4>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        <label>Reviewed by Morty on <em>29th, Feb, 3100</em></label>
+                                        <hr>
+                                        <form action="">
+                                            <div class="form-group">
+                                                 <input type="text" class="form-control" name="review_title" placeholder="Enter Review Title...">
+                                            </div><!--form-group-->
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="review_message"  rows="3" placeholder="Enter Review Message..."></textarea>
+                                            </div><!--form-group-->
+                                            <div class="form-group">
+                                                <input type="submit" name="review_button" class="btn btn-info btn-lg"
+                                                value="Review">
+                                            </div><!--form-group-->
+                                         </form><!--form-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addbusiness" data-toggle="tooltip" title="Edit Business">
+                                        <i class="fa fa-edit"> </i>Edit
+                                </button> &nbsp; &nbsp;
+                                <button type="button" class="btn btn-danger btn-lg" data-toggle="tooltip" title="Delete Business">
+                                        <i class="fa fa-trash"></i>Delete
+                                </button>
+                            </div>
+                        </div>
+                     
+                    </div>
+                </div>
+            </div>
+            
+        </body>
+    </html>
