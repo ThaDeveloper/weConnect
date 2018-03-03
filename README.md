@@ -24,7 +24,7 @@ Ensure you have bootstrap 3.3.7 or later.( Can download or use available CDNs.Re
 
 ![alt text](https://github.com/ThaDeveloper/weConnect/blob/challenge1/designs/documentation/snapshots/login.png "Login Page")
 
-### User registration Page
+### Dashboard Page
 
 ![alt text](https://github.com/ThaDeveloper/weConnect/blob/challenge1/designs/documentation/snapshots/dashboard.png "User Registration page")
 
