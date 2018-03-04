@@ -10,10 +10,12 @@ users = [
 ]
 @app.route('/api/auth/register', methods=['POST'])
 def create_user():
-    user = {'username' : request.json['username'],'password' : request.json['password']}
+    user = {'username' : request.json['username'],'password' : request.json['password'], 'id':len(users)+1}
+    for u in users:
+        if request.json['username'] in u.values():
+            return jsonify({'Message': "User alread exists"}),400
     users.append(user)
-    
-    return jsonify({"Message": "User registered successfully"}),201
+    return jsonify({'Message':'User registered successfully'}),201
 
 
 if __name__=='__main__':
