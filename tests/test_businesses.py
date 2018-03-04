@@ -8,7 +8,7 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-from src.api import app
+# from src.api import app
 from tests.test_setup import TestSetUp
 
 class TestBusinessClassFunctionality(TestSetUp):
