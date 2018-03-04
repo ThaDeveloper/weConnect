@@ -9,23 +9,10 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
 from src.api import app
+from tests.test_setup import TestSetUp
 
-class TestBusinessClassFunctionality(unittest.TestCase):
-    def setUp(self):
-        self.app = app.test_client()
-        self.business_id = 1
-        self.app.post("/api/auth/register",
-                         data=json.dumps(dict(username="username",
-                                              password="pass")),
-                         content_type="application/json")
-
-        response = self.app.post("/api/auth/login",
-                                    data=json.dumps(dict(username="username",
-                                                    password="pass")),
-                                    content_type="application/json")
-        response_msg = json.loads(response.data)
-        self.token = response_msg["Token"]
-
+class TestBusinessClassFunctionality(TestSetUp):
+    
     def test_business_access_with_invalid_token(self):
         """Raise unauthorized error invalid token."""
         response = self.app.post("/api/businesses/",
