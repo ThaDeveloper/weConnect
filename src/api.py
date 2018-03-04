@@ -1,23 +1,29 @@
 from flask import Flask, request, jsonify
 import uuid
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY']= 'doordonotthereisnotry'
+app.config['SECRET_KEY'] = 'doordonotthereisnotry'
 
 users = [
 ]
-@app.route('/api/auth/register', methods=['POST'])
+
+
+@app .route('/api/auth/register',  methods=['POST'])
 def create_user():
-    user = {'username' : request.json['username'],'password' : request.json['password'], 'id':len(users)+1}
+    user = {'username':  request.json['username'], 'password':
+            request.json['password'], 'id': len(users)+1}
     for u in users:
         if request.json['username'] in u.values():
-            return jsonify({'Message': "User alread exists"}),400
+            return jsonify({'Message': "User already exists"}), 400
+        if request.json['username'] == "" or request.json['password'] == "":
+            return jsonify({'Message': 
+            "Username and Password is required"}),400
+
     users.append(user)
-    return jsonify({'Message':'User registered successfully'}),201
+    return jsonify({'Message': 'User registered successfully'}), 201
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     app.run(debug=True)
-
