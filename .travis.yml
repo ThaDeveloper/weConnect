@@ -1,0 +1,17 @@
+language: python
+python:
+  - "3.5"
+install:
+  - pip install -r requirements.txt
+  - pip install python-coveralls
+env:
+  - DB=postgresql
+script: 
+  - nosetests --with-coverage --cover-package=src
+  - coveralls
+after_success:
+ - coveralls
+notifications:
+  slack:
+    on_success: never
+    on_failure: never
