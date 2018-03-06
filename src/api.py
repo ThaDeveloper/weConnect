@@ -5,7 +5,7 @@ from passlib.hash import sha256_crypt
 import jwt
 import datetime
 from functools import wraps
-
+# from models import User
 
 app = Flask(__name__)
 
@@ -14,10 +14,19 @@ app.config['SECRET_KEY'] = 'doordonotthereisnotry'
 
 users = [
 ]
+
+businesses = [
+
+]
 def find_user_by_username(username):
     for user in users:
         if user['username'] == username:
             return user
+
+def find_business_by_id(business_id):
+    for business in businesses:
+        if business['business_id'] == business_id:
+            return business
 
 
 def token_required(f):
@@ -55,6 +64,8 @@ def create_user():
 
     users.append(new_user)
     return jsonify({"Message": "User registered successfully"}), 201
+        
+    
 
 
 @app.route('/api/auth/login', methods = ['POST'])
@@ -77,7 +88,7 @@ def login():
 @token_required
 def logout(current_user):
     session.clear()
-    return jsonify({"Message": "Logged out"}), 201
+    return jsonify({"Message": "Logged out"}), 202
 
 
 @app.route('/api/auth/reset-password', methods=['PUT'])
@@ -90,8 +101,8 @@ def reset_password(current_user):
     response = find_user_by_username(current_user['username'])
     if data['password']:
         response['password'] = sha256_crypt.encrypt(str(data['password']))
-        return jsonify({'msg': 'password updated'}), 200
-    return jsonify({'warning': 'password cannot be empty'}), 403
+        return jsonify({'Message': 'password updated'}), 200
+    return jsonify({'Message': 'password cannot be empty'}), 403
 
 
 @app.route('/api/auth/users', methods=['GET'])
@@ -99,6 +110,29 @@ def get_all_users():
     return jsonify({"users": users}), 200
 
 
+@app.route('/api/businesses', methods=['POST'])
+@token_required
+def create_business(current_user):
+    new_business = {'business_id': str(uuid.uuid4()), 'user_id': find_user_by_username(current_user['username'])['id'], 'name':  request.json['name'],
+                'description': request.json['name'], 'location': request.json['location'], 
+                'category': request.json['category']}
+            
+    for business in businesses:
+        if new_business['name'] == business['name']:
+            return jsonify({'Message': "Business name already exists"}), 400
+        if request.json['name'] == "":
+            return jsonify({'Message': 
+                "Business name is required"}),400
+
+    businesses.append(new_business)
+    return jsonify({"Message": "Business registered successfully"}), 201
+
+
+
+@app.route('/api/businesses', methods=['GET'])
+def get_all_businesses():
+    return jsonify({"businesses": businesses}), 200
+
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True)
  
