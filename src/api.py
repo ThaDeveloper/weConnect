@@ -139,6 +139,21 @@ def get_one_business(business_id):
         return jsonify({"response": response}), 200
     return {"Message": "no data"}
 
+
+@app.route('/api/businesses/<string:business_id>', methods=['PUT'])
+@token_required
+def get_update_business(business_id):
+    """
+    User must be logged in to update business
+    """
+    data = request.get_json()
+    response = find_business_by_id(business_id)
+    if response:
+        if data['name']:
+            response['name'] = data['name']
+            response['description'] = data['description']
+            return jsonify({'Message': 'Business updated'}), 200
+        return jsonify({'Message': 'Business name cannot be empty'}), 403
     
 
 @app.route('/api/businesses', methods=['GET'])
