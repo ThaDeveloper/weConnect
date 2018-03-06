@@ -128,6 +128,18 @@ def create_business(current_user):
     return jsonify({"Message": "Business registered successfully"}), 201
 
 
+@app.route('/api/businesses/<string:business_id>', methods=['GET'])
+def get_one_business(business_id):
+    """
+    User must be logged in to update business
+    """
+    # data = request.get_json()
+    response = find_business_by_id(business_id)
+    if response:
+        return jsonify({"response": response}), 200
+    return {"Message": "no data"}
+
+    
 
 @app.route('/api/businesses', methods=['GET'])
 def get_all_businesses():
