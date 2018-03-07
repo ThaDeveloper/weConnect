@@ -6,8 +6,8 @@ import jwt
 import datetime
 from functools import wraps
 import os
-from models import User, Business
-from config import app_config
+from .models import User, Business
+from .config import app_config
 
 app = Flask(__name__)
 
@@ -17,6 +17,12 @@ user_object = User()
 business_object = Business()
 
 app.config['SECRET_KEY'] = 'doordonotthereisnotry'
+
+
+def find_business_by_id(business_id):
+    for business in business_object.businesses:
+        if business[business_id] == business_id:
+            return business
 
 def token_required(f):
     @wraps(f)
@@ -65,11 +71,11 @@ def login():
     auth = request.get_json()
 
     if not auth or not auth['username'] or not auth['password']:
-        return jsonify({"message": "login required!"}), 401
+        return jsonify({"Message": "login required!"}), 401
 
     if auth['username'] not in user_object.users.keys():
        
-        return jsonify({"message": "Username not found!"}), 401
+        return jsonify({"Message": "Username not found!"}), 401
 
     user = user_object.users[auth['username']]
     if check_password_hash(user['password'], auth['password']):
@@ -78,7 +84,7 @@ def login():
         user_object.u_token[user['username']] = token
         return jsonify({"token": token.decode('UTF-8')}), 200
 
-    return jsonify({"message": "login invalid!"}), 401
+    return jsonify({"Message": "login invalid!"}), 401
 
 
 @app.route('/api/v1/auth/logout', methods = ['DELETE'])
@@ -111,22 +117,22 @@ def get_all_users():
 def create_business(current_user):
     data = request.get_json()
     if not data or not data['name']:
-        return jsonify({"message": "Name is required!"}), 400
+        return jsonify({"Message": "Name is required!"}), 400
 
     if data['name'] in business_object.businesses:
-        return jsonify({"message": "Name already exists!"}), 400
+        return jsonify({"Message": "Name already exists!"}), 400
     # add business
     user_id = current_user['username']
     business_object.register_business(data['name'], data['description'], data['location'],
                                   data['category'], user_id)
-    return jsonify({"message": "Business created"}), 201
+    return jsonify({"Message": "Business created"}), 201
 
 
 @app.route('/api/v1/businesses/<string:business_id>', methods=['GET'])
 def get_one_business(business_id):
-    response = business_object.find_business_by_id(business_id)
+    response = find_business_by_id(business_id)
     if response:
-        return jsonify({"Business Profile": response}), 200
+        return jsonify({"reponse": response}), 200
     return {"Message": "Business doesn't exist"}
 
 
@@ -154,5 +160,5 @@ def get_all_businesses():
 # config_name = os.getenv('APP_SETTINGS')
 # app = create_app(config_name)
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8000)
  
