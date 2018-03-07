@@ -141,6 +141,20 @@ def get_one_business(business_id):
     return {"Message": "Business doesn't exist"}
 
 
+@app.route('/api/v1/businesses/<string:business_id>', methods=['PUT'])
+@token_required
+def get_update_business(current_user, business_id):
+    """
+    User must be logged in to update business
+    """
+    data = request.get_json()
+    new_name = data['name']
+    new_description = data['description']
+    response = business_object.update_business(business_id, new_name, new_description)
+    if response:
+        return jsonify({"response": response}), 200
+    # return jsonify({'Message': 'Business updated'}), 200
+    
 
 @app.route('/api/v1/businesses', methods=['GET'])
 def get_all_businesses():
