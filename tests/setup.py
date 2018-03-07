@@ -8,7 +8,7 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-from src.views import app
+from src.views import app,user_object
 
 
 class TestSetUp(unittest.TestCase):
@@ -23,6 +23,7 @@ class TestSetUp(unittest.TestCase):
                          "category": "Technology"}
         self.empty_business = {"name": "", "description": "", "location": "",
                               "category": ""}
+       
         # Create_user
         self.app.post('/api/v1/auth/register', data=json.dumps(self.user),
                            headers={"content-type": "application/json"})
@@ -33,4 +34,6 @@ class TestSetUp(unittest.TestCase):
         self.data = json.loads(self.login.get_data(as_text=True))
         # get the token to be used by tests
         self.token = self.data['token']
+
+       
     

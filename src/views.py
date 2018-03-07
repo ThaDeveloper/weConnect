@@ -6,8 +6,16 @@ import jwt
 import datetime
 from functools import wraps
 import os
-from .models import User, Business
-from .config import app_config
+import sys
+import inspect
+"""python can't perform relaive import but pytest hence the need for absolute import"""
+currentdir = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+from src.models import User, Business
+from src.config import app_config
 
 app = Flask(__name__)
 
@@ -104,11 +112,12 @@ def reset_password(current_user):
     password_hash = generate_password_hash(data['password'], method='sha256')
     usr = user_object.users[current_user["username"]]
     usr.update({"password": password_hash})
-    return jsonify({"message": "password updated"})
+    return jsonify({"Message": "password updated"}), 202
 
 
 @app.route('/api/v1/auth/users', methods=['GET'])
-def get_all_users():
+@token_required
+def get_all_users(current_user):
     return jsonify({"users": user_object.users}), 200
 
 
