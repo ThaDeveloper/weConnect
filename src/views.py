@@ -27,11 +27,6 @@ business_object = Business()
 app.config['SECRET_KEY'] = 'doordonotthereisnotry'
 
 
-def find_business_by_id(business_id):
-    for business in business_object.businesses:
-        if business[business_id] == business_id:
-            return business
-
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -102,7 +97,7 @@ def logout(current_user):
     return jsonify({"Message": "Logged out"}), 202
 
 
-@app.route('/api/v1/auth/reset-password', methods=['PUT'])
+@app.route('/api/v1/auth/reset-password', methods=['GET0','PUT'])
 @token_required
 def reset_password(current_user):
     """
@@ -132,34 +127,20 @@ def create_business(current_user):
         return jsonify({"Message": "Name already exists!"}), 400
     # add business
     user_id = current_user['username']
-    business_object.register_business(data['name'], data['description'], data['location'],
+    res=business_object.register_business(data['name'], data['description'], data['location'],
                                   data['category'], user_id)
-    return jsonify({"Message": "Business created"}), 201
+    return jsonify({"Message": res}), 201
 
 
 @app.route('/api/v1/businesses/<string:business_id>', methods=['GET'])
 def get_one_business(business_id):
-    response = find_business_by_id(business_id)
+    """Return a single business"""
+    response = business_object.find_business_by_id(business_id)
     if response:
-        return jsonify({"reponse": response}), 200
+        return jsonify({"response": response}), 200
     return {"Message": "Business doesn't exist"}
 
 
-@app.route('/api/v1/businesses/<string:business_id>', methods=['PUT'])
-@token_required
-def get_update_business(business_id):
-    """
-    User must be logged in to update business
-    """
-    data = request.get_json()
-    response = business_object.find_business_by_id(business_id)
-    if response:
-        if data['name']:
-            response['name'] = data['name']
-            response['description'] = data['description']
-            return jsonify({'Message': 'Business updated'}), 200
-        return jsonify({'Message': 'Business name cannot be empty'}), 403
-    
 
 @app.route('/api/v1/businesses', methods=['GET'])
 def get_all_businesses():

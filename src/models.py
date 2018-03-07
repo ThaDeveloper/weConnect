@@ -23,12 +23,21 @@ class Business(object):
 
     def register_business(self, name, description, location, category, user_id):
         """Adds a new  to businesses dictionary"""
-        new_business = {'business_id': uuid.uuid4(), 'name': name, 'description': description, 'location': location,
+        new_business = {'business_id': str(uuid.uuid4()), 'name': name, 'description': description, 'location': location,
                         'category': category, 'user_id': user_id}
         self.businesses[name] = new_business
         return self.businesses
 
     def find_business_by_id(self,business_id):
-        for business in self.businesses:
-            if self.businesses['business_id'] == business_id:
-                return business
+        if self.businesses:
+            for business in self.businesses.values():
+                if business.get('business_id') == business_id:
+                    return business
+
+    def update_business(self,business_id, name, description):
+        if self.businesses:
+            for business in self.businesses.values():
+                if business.get('business_id') == business_id:
+                    business['name'] = name
+                    business['description'] = description
+                    return business
