@@ -41,3 +41,21 @@ class Business(object):
                     business['name'] = name
                     business['description'] = description
                     return business
+
+
+class Reviews(object):
+    """Modeling the Reviews endpoint for data storage"""
+
+    def __init__(self):
+        self.reviews = {}
+
+    def add_review(self, title, message, user_id, business_id):
+        """ Creates a new review for businesses"""
+        id = str(uuid.uuid4())
+        new_review = {
+            'id': id,
+            'title': title,
+            'user_id': user_id,
+            'business_id': business_id
+        }
+        self.reviews[id] = new_review
