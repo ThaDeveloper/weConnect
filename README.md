@@ -1,5 +1,6 @@
 # weConnect
 
+[![Build Status](https://travis-ci.org/ThaDeveloper/weConnect.svg?branch=dev)](https://travis-ci.org/ThaDeveloper/weConnect)
 [![Coverage Status](https://coveralls.io/repos/github/ThaDeveloper/weConnect/badge.svg?branch=challenge2)](https://coveralls.io/github/ThaDeveloper/weConnect?branch=challenge2)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/cfc7addc7b1b4fbc90574ab6f4192dde)](https://www.codacy.com/app/ThaDeveloper/weConnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThaDeveloper/weConnect&amp;utm_campaign=Badge_Grade)
 
