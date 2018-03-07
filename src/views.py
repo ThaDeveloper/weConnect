@@ -14,7 +14,7 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-from src.models import User, Business
+from src.models import User, Business, Reviews
 from src.config import app_config
 
 app = Flask(__name__)
@@ -23,6 +23,7 @@ app = Flask(__name__)
 """Instances of User and Business class"""
 user_object = User()
 business_object = Business()
+review_object = Reviews()
 
 app.config['SECRET_KEY'] = 'doordonotthereisnotry'
 
@@ -174,6 +175,19 @@ def remove_business(current_user,business_id):
         return jsonify({"Message": "You can only delete your own business!!"}), 401
     return jsonify({"Message": "Business not found"}), 401
    
+
+@app.route('/api/v1/businesses/<business_id>/reviews', methods=['POST'])
+@token_required
+def create_review(current_user, business_id):
+    """ Add revies to a business. only logged in users"""
+    data = request.get_json()
+    if not data or not data['title']:
+        return jsonify({"Message": "No review in your data"}), 401
+    if business_id not in business_object.businesses:
+        return jsonify({"Message": "Business not found"}), 401
+    user_id = current_user['username']
+    review_object.add_review(data['title'], data['message'], user_id, business_id)
+    return jsonify({"Message": "Your review has been recorded"}), 201
 
 # config_name = os.getenv('APP_SETTINGS')
 # app = create_app(config_name)

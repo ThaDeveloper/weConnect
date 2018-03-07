@@ -51,10 +51,10 @@ class Reviews(object):
 
     def add_review(self, title, message, user_id, business_id):
         """ Creates a new review for businesses"""
-        id = str(uuid.uuid4())
         new_review = {
-            'id': id,
+            'id': str(uuid.uuid4()),
             'title': title,
+            'message': message,
             'user_id': user_id,
             'business_id': business_id
         }
