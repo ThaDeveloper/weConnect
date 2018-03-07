@@ -129,7 +129,7 @@ def create_business(current_user):
     user_id = current_user['username']
     res=business_object.register_business(data['name'], data['description'], data['location'],
                                   data['category'], user_id)
-    return jsonify({"Message": res}), 201
+    return jsonify({"Business Profile": res}), 201
 
 
 @app.route('/api/v1/businesses/<string:business_id>', methods=['GET'])
@@ -137,7 +137,7 @@ def get_one_business(business_id):
     """Return a single business"""
     response = business_object.find_business_by_id(business_id)
     if response:
-        return jsonify({"response": response}), 200
+        return jsonify({"Business Profile": response}), 200
     return {"Message": "Business doesn't exist"}
 
 
@@ -152,7 +152,7 @@ def get_update_business(current_user, business_id):
     new_description = data['description']
     response = business_object.update_business(business_id, new_name, new_description)
     if response:
-        return jsonify({"response": response}), 200
+        return jsonify({'Message': 'Business updated'}), 200
     # return jsonify({'Message': 'Business updated'}), 200
     
 
@@ -161,8 +161,22 @@ def get_all_businesses():
     return jsonify({"businesses": business_object.businesses}), 200
 
 
+@app.route('/api/v1/businesses/<string:business_id>', methods=['DELETE'])
+@token_required
+def remove_business(current_user,business_id):
+    business = business_object.find_business_by_id(business_id)
+    if business:
+        if current_user['username'] == business['user_id']:
+            # print(business_object.businesses[business_id])
+            # print(business_object.businesses)
+            del business_object.businesses['name']
+            return jsonify({"Message": "Business deleted successfully"}), 200
+        return jsonify({"Message": "You can only delete your own business!!"}), 401
+    return jsonify({"Message": "Business not found"}), 401
+   
+
 # config_name = os.getenv('APP_SETTINGS')
 # app = create_app(config_name)
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(debug=False)
  
