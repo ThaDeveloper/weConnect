@@ -168,9 +168,7 @@ def remove_business(current_user,business_id):
     business = business_object.find_business_by_id(business_id)
     if business:
         if current_user['username'] == business['user_id']:
-            # print(business_object.businesses[business_id])
-            # print(business_object.businesses)
-            del business_object.businesses['name']
+            del business_object.businesses[business['name']]
             return jsonify({"Message": "Business deleted successfully"}), 200
         return jsonify({"Message": "You can only delete your own business!!"}), 401
     return jsonify({"Message": "Business not found"}), 401
