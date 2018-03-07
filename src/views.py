@@ -189,6 +189,19 @@ def create_review(current_user, business_id):
     review_object.add_review(data['title'], data['message'], user_id, business_id)
     return jsonify({"Message": "Your review has been recorded"}), 201
 
+@app.route('/api/v1/businesses/<business_id>/reviews', methods=['GET'])
+@token_required
+def get_business_reviews(current_user, business_id):
+    """Gets all reviews for a business"""
+    if business_id not in business_object.businesses:
+        return jsonify({"Message": "Business not found"})
+    all_reviews = []
+    for review in review_object.reviews.values():
+        if review['business_id'] == business_id:
+            all_reviews.append(review)
+            return jsonify(all_reviews), 200
+
+
 # config_name = os.getenv('APP_SETTINGS')
 # app = create_app(config_name)
 if __name__ == '__main__':
