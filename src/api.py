@@ -1,32 +1,41 @@
-from flask import Flask, request, jsonify, make_response,session
+from flask import Flask, request, jsonify, make_response,session, Blueprint
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
 from passlib.hash import sha256_crypt
 import jwt
 import datetime
 from functools import wraps
-# from models import User
+import os
+from models import User, Business
+from config import app_config
 
-app = Flask(__name__)
+# create a flask app instance
 
-app.config['SECRET_KEY'] = 'doordonotthereisnotry'
+api = Blueprint('app', __name__)
 
 
-users = [
-]
+def create_app(config_name):
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(app_config[config_name])
+    app.config.from_pyfile('config.py')
+    app.register_blueprint(api)
+    return app
 
-businesses = [
 
-]
-def find_user_by_username(username):
-    for user in users:
-        if user['username'] == username:
-            return user
+# instance of model that will store app data
+# application will use data structures to srore data
+user_model = User()
+business_model = Business()
 
-def find_business_by_id(business_id):
-    for business in businesses:
-        if business['business_id'] == business_id:
-            return business
+# def find_user_by_username(username):
+#     for user in users:
+#         if user['username'] == username:
+#             return user
+
+# def find_business_by_id(business_id):
+#     for business in businesses:
+#         if business['business_id'] == business_id:
+#             return business
 
 
 def token_required(f):
@@ -41,8 +50,11 @@ def token_required(f):
             return jsonify({'Message' : 'Token is missing!'}), 401
 
         try: 
-            data = jwt.decode(token, app.config['SECRET_KEY'])
-            current_user = find_user_by_username(data['username'])
+            data = jwt.decode(token, os.getenv("SECRET_KEY")
+            # current_user = find_user_by_username(data['username'])
+            if data['username'] in user_model.user_token
+                current_user = user_model.users[data['username']]
+            return jsonify({"Message": "Token expired"})
         except:
             return jsonify({'Message' : 'Token is invalid!'}), 401
 
@@ -51,23 +63,22 @@ def token_required(f):
     return decorated
 
 
-@app .route('/api/auth/register',  methods=['POST'])
+@api.route('/api/v1/auth/register',  methods=['POST'])
 def create_user():
-    new_user = {'id': str(uuid.uuid4()), 'username':  request.json['username'],
-                'password': sha256_crypt.encrypt(str(request.json['password'])), "admin": False}
-    for user in users:
-        if new_user['username'] == user['username']:
-            return jsonify({'Message': "User already exists"}), 400
-        if request.json['username'] == "" or request.json['password'] == "":
+     """receive user input as json object"""
+    data = request.get_json()
+    password_hash = sha256_crypt.encrypt(str(data['password']))
+    
+    if data['username'] in user_model.users:
+        return jsonify({'Message': "User already exists"}), 400
+    if data['username'] == "" or data['password'] == "":
             return jsonify({'Message': 
                 "Username and Password is required"}),400
 
-    users.append(new_user)
+    data = user_model.create_user(data['username']), password_hash)
     return jsonify({"Message": "User registered successfully"}), 201
-        
-    
 
-
+  
 @app.route('/api/auth/login', methods = ['POST'])
 def login():
     auth = request.authorization
