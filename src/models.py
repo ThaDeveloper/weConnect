@@ -1,9 +1,8 @@
 import uuid
 
-
+all_reviews = []
 class User(object):
     """Store user data in dictionaries"""
-
     def __init__(self):
         self.users = {}
         self.u_token = {}
@@ -59,3 +58,9 @@ class Reviews(object):
             'business_id': business_id
         }
         self.reviews[id] = new_review
+    
+    def get_reviews(self, business_id):
+        for review in self.reviews.values():
+            if review['business_id'] == business_id:
+                all_reviews.append(review)
+                return all_reviews

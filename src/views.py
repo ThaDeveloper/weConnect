@@ -177,27 +177,30 @@ def remove_business(current_user,business_id):
 @app.route('/api/v1/businesses/<business_id>/reviews', methods=['POST'])
 @token_required
 def create_review(current_user, business_id):
-    """ Add revies to a business. only logged in users"""
+    """ User can only review a business if logged in"""
     data = request.get_json()
     if not data or not data['title']:
-        return jsonify({"Message": "No review in your data"}), 401
-    if business_id not in business_object.businesses:
-        return jsonify({"Message": "Business not found"}), 401
-    user_id = current_user['username']
-    review_object.add_review(data['title'], data['message'], user_id, business_id)
-    return jsonify({"Message": "Your review has been recorded"}), 201
+        return jsonify({"Message": "Review title is required"}), 401
+
+    business = business_object.find_business_by_id(business_id)
+    if business:
+        user_id = current_user['username']
+        review_object.add_review(data['title'], data['message'], user_id, business_id)
+        return jsonify({"Message": "Your review has been recorded"}), 201
+
+    return jsonify({"Message": "Business not found"}), 401
 
 @app.route('/api/v1/businesses/<business_id>/reviews', methods=['GET'])
 @token_required
 def get_business_reviews(current_user, business_id):
-    """Gets all reviews for a business"""
-    if business_id not in business_object.businesses:
-        return jsonify({"Message": "Business not found"})
-    all_reviews = []
-    for review in review_object.reviews.values():
-        if review['business_id'] == business_id:
-            all_reviews.append(review)
-            return jsonify(all_reviews), 200
+    """List all business' reviews"""
+    business = business_object.find_business_by_id(business_id)
+    if business:
+        reviews = review_object.get_reviews(business_id)
+        return jsonify({"Reviews": reviews}), 200
+    return jsonify({"Message": "Business not found"})
+        
+    
 
 
 # config_name = os.getenv('APP_SETTINGS')
