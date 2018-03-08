@@ -1,7 +1,7 @@
 # weConnect
 
-[![Build Status](https://travis-ci.org/ThaDeveloper/weConnect.svg?branch=dev)](https://travis-ci.org/ThaDeveloper/weConnect)
-[![Coverage Status](https://coveralls.io/repos/github/ThaDeveloper/weConnect/badge.svg?branch=dev)](https://coveralls.io/github/ThaDeveloper/weConnect?branch=dev)
+[![Build Status](https://travis-ci.org/ThaDeveloper/weConnect.svg?branch=challenge2)](https://travis-ci.org/ThaDeveloper/weConnect)
+[![Coverage Status](https://coveralls.io/repos/github/ThaDeveloper/weConnect/badge.svg?branch=challenge2)](https://coveralls.io/github/ThaDeveloper/weConnect?branch=challenge2)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/cfc7addc7b1b4fbc90574ab6f4192dde)](https://www.codacy.com/app/ThaDeveloper/weConnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThaDeveloper/weConnect&amp;utm_campaign=Badge_Grade)
 
 A platform that provides a platform that brings businesses and individuals together.
@@ -60,7 +60,7 @@ Ensure you have bootstrap 3.3.7 or later.( Can download or use available CDNs.Re
 - A working Virtual environment
 
 ### Installation
-1. Create a [virtual environment](http://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv
+1. Create a [virtual environment](http://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv)
 `$ virtualenv envname` and then `$ source envname/bin/activate`
 On the weConnect directory
 
