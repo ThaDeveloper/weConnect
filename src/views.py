@@ -64,7 +64,9 @@ def create_user():
     if data['username'] == "" or data['password'] == "":
             return jsonify({'Message': 
                 "Username and Password is required"}),400
-
+    if not isinstance(data['username'], str):
+        return jsonify({"Message":
+                 "Wrong username format: Can only be a string"})
     data = user_object.create_user(data['username'], password_hash)
     return jsonify({"Message": "User registered successfully"}), 201
 
