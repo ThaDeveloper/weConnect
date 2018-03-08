@@ -1,9 +1,9 @@
 language: python
 python:
-  - "3.5"
+  - "3.5.2"
 install:
   - pip install -r requirements.txt
-  - pip install python-coveralls
+  - pip install coveralls
 env:
   - DB=postgresql
 script: 
