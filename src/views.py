@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, make_response,session, Blueprint
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
-from passlib.hash import sha256_crypt
 import jwt
 import datetime
 from functools import wraps
