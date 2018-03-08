@@ -3,7 +3,7 @@ import json
 import unittest
 import sys
 import inspect
-import pytest
+
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -80,7 +80,6 @@ class TestBusinessClassFunctionality(TestSetUp):
         response_msg = json.loads(resp.data.decode("UTF-8"))
         self.assertIn("not found", response_msg["Message"])
 
-    @pytest.mark.order1
     def test_update_business(self):
         """Tests a business can be updated."""
         response = self.app.put("/api/v1/businesses/1",
@@ -137,7 +136,7 @@ class TestBusinessClassFunctionality(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("not found", response_msg["Message"])
     
-    @pytest.mark.order2
+   
     def test_unauthorized_delete(self):
         response = self.app.delete("/api/v1/businesses/2",
                                       content_type="application/json",

@@ -8,7 +8,7 @@ from functools import wraps
 import os
 import sys
 import inspect
-"""python can't perform relaive import but pytest hence the need for absolute import"""
+"""python can't perform relative import but pytest hence the need for absolute import"""
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -41,7 +41,6 @@ def token_required(f):
 
         try: 
             data = jwt.decode(token, app.config['SECRET_KEY'])
-            # current_user = find_user_by_username(data['username'])
             if data['username'] in user_object.u_token:
                 current_user = user_object.users[data['username']]
             else:
@@ -65,7 +64,9 @@ def create_user():
     if data['username'] == "" or data['password'] == "":
             return jsonify({'Message': 
                 "Username and Password is required"}),400
-
+    if not isinstance(data['username'], str):
+        return jsonify({"Message":
+                 "Wrong username format: Can only be a string"})
     data = user_object.create_user(data['username'], password_hash)
     return jsonify({"Message": "User registered successfully"}), 201
 
@@ -126,7 +127,7 @@ def create_business(current_user):
 
     if data['name'] in business_object.businesses:
         return jsonify({"Message": "Name already exists!"}), 400
-    # add business
+ 
     user_id = current_user['username']
     business_object.register_business(data['name'], data['description'], data['location'],
                                   data['category'], user_id)
@@ -151,12 +152,17 @@ def get_update_business(current_user, business_id):
     data = request.get_json()
     new_name = data['name']
     new_description = data['description']
-    response = business_object.update_business(business_id, new_name, new_description)
-    if response:
-        if new_name not in business_object.businesses:
-            return jsonify({'Message': 'Business updated'}), 200
-        return jsonify({'Message': 'Business name already exists'}), 400
+    business = business_object.find_business_by_id(business_id)
+    if business:
+        if current_user['username'] == business['user_id']:
+            response = business_object.update_business(business_id, new_name, new_description)
+            if response:
+                if new_name not in business_object.businesses:
+                    return jsonify({'Message': 'Business updated'}), 200
+                return jsonify({'Message': 'Business name already exists'}), 400
+        return jsonify({"Message": "Unauthorized:You can only update your own business!!"}), 401
     return jsonify({'Message': 'Business not found'}), 404
+
     
 
 @app.route('/api/v1/businesses', methods=['GET'])
