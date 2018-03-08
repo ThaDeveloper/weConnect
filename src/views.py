@@ -182,7 +182,7 @@ def create_review(current_user, business_id):
     """ User can only review a business if logged in"""
     data = request.get_json()
     if not data or not data['title']:
-        return jsonify({"Message": "Review title is required"}), 401
+        return jsonify({"Message": "Review title is required"}), 400
 
     business = business_object.find_business_by_id(business_id)
     if business:
