@@ -21,7 +21,7 @@ class Business(object):
         self.businesses = {}
 
     def register_business(self, name, description, location, category, user_id):
-        """Adds a new  to businesses dictionary"""
+        """Adds a new  business to businesses dictionary"""
         new_business = {'business_id': len(self.businesses)+1, 'name': name, 'description': description, 'location': location,
                         'category': category, 'user_id': user_id}
         self.businesses[name] = new_business
@@ -59,10 +59,10 @@ class Reviews(object):
             'business_id': business_id
         }
         self.reviews[id] = new_review
+        # return self.reviews
     
     def get_reviews(self, business_id):
-        all_reviews.remove
-        for review in self.reviews.values():
+      for review in self.reviews.values():
             if review['business_id'] == business_id:
                 all_reviews.append(review)
                 return all_reviews
