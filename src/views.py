@@ -128,21 +128,21 @@ def create_business(current_user):
         return jsonify({"Message": "Name already exists!"}), 400
     # add business
     user_id = current_user['username']
-    res=business_object.register_business(data['name'], data['description'], data['location'],
+    business_object.register_business(data['name'], data['description'], data['location'],
                                   data['category'], user_id)
-    return jsonify({"Business Profile": res}), 201
+    return jsonify({"Message": "Business registered successfully"}), 201
 
 
-@app.route('/api/v1/businesses/<string:business_id>', methods=['GET'])
+@app.route('/api/v1/businesses/<int:business_id>', methods=['GET'])
 def get_one_business(business_id):
     """Return a single business"""
     response = business_object.find_business_by_id(business_id)
     if response:
         return jsonify({"Business Profile": response}), 200
-    return {"Message": "Business doesn't exist"}
+    return jsonify({"Message": "Business not found"}), 404
 
 
-@app.route('/api/v1/businesses/<string:business_id>', methods=['PUT'])
+@app.route('/api/v1/businesses/<int:business_id>', methods=['PUT'])
 @token_required
 def get_update_business(current_user, business_id):
     """
@@ -153,8 +153,10 @@ def get_update_business(current_user, business_id):
     new_description = data['description']
     response = business_object.update_business(business_id, new_name, new_description)
     if response:
-        return jsonify({'Message': 'Business updated'}), 200
-    # return jsonify({'Message': 'Business updated'}), 200
+        if new_name not in business_object.businesses:
+            return jsonify({'Message': 'Business updated'}), 200
+        return jsonify({'Message': 'Business name already exists'}), 400
+    return jsonify({'Message': 'Business not found'}), 404
     
 
 @app.route('/api/v1/businesses', methods=['GET'])
@@ -162,7 +164,7 @@ def get_all_businesses():
     return jsonify({"businesses": business_object.businesses}), 200
 
 
-@app.route('/api/v1/businesses/<string:business_id>', methods=['DELETE'])
+@app.route('/api/v1/businesses/<int:business_id>', methods=['DELETE'])
 @token_required
 def remove_business(current_user,business_id):
     business = business_object.find_business_by_id(business_id)
@@ -170,11 +172,11 @@ def remove_business(current_user,business_id):
         if current_user['username'] == business['user_id']:
             del business_object.businesses[business['name']]
             return jsonify({"Message": "Business deleted successfully"}), 200
-        return jsonify({"Message": "You can only delete your own business!!"}), 401
-    return jsonify({"Message": "Business not found"}), 401
+        return jsonify({"Message": "Unauthorized:You can only delete your own business!!"}), 401
+    return jsonify({"Message": "Business not found"}), 404
    
 
-@app.route('/api/v1/businesses/<business_id>/reviews', methods=['POST'])
+@app.route('/api/v1/businesses/<int:business_id>/reviews', methods=['POST'])
 @token_required
 def create_review(current_user, business_id):
     """ User can only review a business if logged in"""
@@ -190,7 +192,7 @@ def create_review(current_user, business_id):
 
     return jsonify({"Message": "Business not found"}), 401
 
-@app.route('/api/v1/businesses/<business_id>/reviews', methods=['GET'])
+@app.route('/api/v1/businesses/<int:business_id>/reviews', methods=['GET'])
 @token_required
 def get_business_reviews(current_user, business_id):
     """List all business' reviews"""

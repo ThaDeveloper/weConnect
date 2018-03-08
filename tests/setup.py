@@ -9,7 +9,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
 from src.views import app,user_object
-
+from src.models import Business
 
 class TestSetUp(unittest.TestCase):
     """Initialize the app with test data"""
@@ -23,9 +23,10 @@ class TestSetUp(unittest.TestCase):
                          "category": "Technology"}
         self.empty_business = {"name": "", "description": "", "location": "",
                               "category": ""}
-       
+        self.new_business ={"name": "Apple", "description": "", "location": "",
+                              "category": ""}
         # Create_user
-        self.app.post('/api/v1/auth/register', data=json.dumps(self.user),
+        self.register = self.app.post('/api/v1/auth/register', data=json.dumps(self.user),
                            headers={"content-type": "application/json"})
 
 
@@ -34,6 +35,8 @@ class TestSetUp(unittest.TestCase):
         self.data = json.loads(self.login.get_data(as_text=True))
         # get the token to be used by tests
         self.token = self.data['token']
+
+      
 
        
     

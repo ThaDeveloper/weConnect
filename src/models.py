@@ -22,7 +22,7 @@ class Business(object):
 
     def register_business(self, name, description, location, category, user_id):
         """Adds a new  to businesses dictionary"""
-        new_business = {'business_id': str(uuid.uuid4()), 'name': name, 'description': description, 'location': location,
+        new_business = {'business_id': len(self.businesses)+1, 'name': name, 'description': description, 'location': location,
                         'category': category, 'user_id': user_id}
         self.businesses[name] = new_business
         return self.businesses
@@ -32,6 +32,7 @@ class Business(object):
             for business in self.businesses.values():
                 if business.get('business_id') == business_id:
                     return business
+                
 
     def update_business(self,business_id, name, description):
         if self.businesses:
@@ -60,6 +61,7 @@ class Reviews(object):
         self.reviews[id] = new_review
     
     def get_reviews(self, business_id):
+        all_reviews.remove
         for review in self.reviews.values():
             if review['business_id'] == business_id:
                 all_reviews.append(review)
