@@ -60,7 +60,7 @@ Ensure you have bootstrap 3.3.7 or later.( Can download or use available CDNs.Re
 - A working Virtual environment
 
 ### Installation
-1. Create a [virtual environment](http://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv
+1. Create a [virtual environment](http://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv)
 `$ virtualenv envname` and then `$ source envname/bin/activate`
 On the weConnect directory
 
