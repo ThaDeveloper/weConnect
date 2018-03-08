@@ -153,14 +153,16 @@ def get_update_business(current_user, business_id):
     new_name = data['name']
     new_description = data['description']
     business = business_object.find_business_by_id(business_id)
-    if current_user['username'] == business['user_id']:
-        response = business_object.update_business(business_id, new_name, new_description)
-        if response:
-            if new_name not in business_object.businesses:
-                return jsonify({'Message': 'Business updated'}), 200
-            return jsonify({'Message': 'Business name already exists'}), 400
-        return jsonify({'Message': 'Business not found'}), 404
-    return jsonify({"Message": "Unauthorized:You can only update your own business!!"}), 401
+    if business:
+        if current_user['username'] == business['user_id']:
+            response = business_object.update_business(business_id, new_name, new_description)
+            if response:
+                if new_name not in business_object.businesses:
+                    return jsonify({'Message': 'Business updated'}), 200
+                return jsonify({'Message': 'Business name already exists'}), 400
+        return jsonify({"Message": "Unauthorized:You can only update your own business!!"}), 401
+    return jsonify({'Message': 'Business not found'}), 404
+
     
 
 @app.route('/api/v1/businesses', methods=['GET'])

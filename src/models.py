@@ -59,7 +59,7 @@ class Reviews(object):
             'business_id': business_id
         }
         self.reviews[id] = new_review
-        # return self.reviews
+       
     
     def get_reviews(self, business_id):
       for review in self.reviews.values():
