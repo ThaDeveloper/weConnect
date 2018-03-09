@@ -27,6 +27,7 @@ app.config['SECRET_KEY'] = 'doordonotthereisnotry'
 
 
 def token_required(f):
+    """All endoints that need log in will be wrapped by this decorator"""
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
@@ -70,6 +71,7 @@ def create_user():
 
 @app.route('/api/v1/auth/login', methods=['POST'])
 def login():
+    """Log in and generate token"""
     auth = request.get_json()
 
     if not auth or not auth['username'] or not auth['password']:
