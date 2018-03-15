@@ -9,82 +9,100 @@
     	<link rel="stylesheet" href="css/bootstrap-theme.min.css">	
 		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:700, 600,500,400,300' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-		<link rel="stylesheet" href="css/index.css">
-		
-		
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="css/main.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="js/main.js"></script>
 	</head>
 	<body>
 		<div class="header">
 			<div class="logo">
-				<i class="fa fa-connectdevelop"></i>
-				<span>weConnect</span>
+				<a href="index.html">
+					<i class="fa fa-connectdevelop"></i>
+					<span>weConnect</span>
+				</a>
 			</div>
 			<a href="#" class="nav-trigger"><span></span></a>
 		</div>
 		<div class="side-nav">
 			<div class="logo">
-				<i class="fa fa-connectdevelop"></i>
-				<span>weConnect</span>
+				<a href="index.html">
+					<i class="fa fa-connectdevelop"></i>
+					<span>weConnect</span>
+				</a>
 			</div>
 			<nav>
 				<ul>
 					<li class="active">
-						<a href="#">
+						<a href="index.html">
 							<span><i class="fa fa-briefcase"></i></span>
-							<span>Business</span>
+							<span>Businesseses</span>
 						</a>
 					</li>
+					
 					<li>
-						<a href="#">
-							<span><i class="fa fa-search"></i></span>
-							<span>Search</span>
-						</a>
-					</li>
-					<li>
-						<!-- if signedin?-->
-						<a href="#">
+						<!-- if admin?-->
+						<a href="">
 							<span><i class="fa fa-users"></i></span>
 							<span>Users</span>
 						</a>
 						<!---->
 					</li>
 					<li>
-						<!-- if signedin?-->
-						<a href="#">
+						<!--if loggedin?-->
+						<a href="">
 							<span><i class="fa fa-user"></i></span>
 							<span>Account</span>
 						</a>
 						<!---->
 					</li>
 					<li>
-						<!-- if signedin?-->
-						<a href="#">
-							<span><i class="fa fa-sign-out"></i></span>
-							<span>Signout</span>
-						</a>
-						<!--else
+						<!--else-->
 						<a href="login.html">
-								<span><i class="fa fa-sign-in-alt"></i></span>
-								<span>Sign In</span>
-							</a>-->
+							<span><i class="fa fa-sign-in"></i></span>
+							<span>Login</span>
+						</a>
+						
+					</li>
+					<li>
+						<a href="register.html">
+							<span><i class="fa fa-registered"></i></span>
+							<span>Register</span>
+						</a>
+						<!---->
 					</li>
 				</ul>
 			</nav>
 		</div>
 		<div class="main-content">
-			<div class="container">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<label>Business Profiles</label>
-						<!-- Button trigger modal -->
+			<div class="title">
+				<div class="row">
+					<div class="col-md-4">
+						<label pu>Business Profiles</label>
+					</div>
+					<div class="col-md-4">
+						<form method="post" action="" class="search">
+						    <div class="input-group">
+							    <input type="text" class="form-control" name="search" size="60" placeholder="Enter Business Name, Location or Category">
+							    <span class="input-group-btn">
+							        <button class="btn btn-info"><i class="fa fa-search"></i></button>
+							    </span>
+							</div>
+						</form> 
+					</div>
+					<div class="col-md-4">
 						<button type="button" class="btn btn-info pull-right" data-toggle="modal" data-target="#addbusiness">
-								Add Business
+							<i class="fa fa-plus"></i> Add Business
 						</button>
 					</div>
-					<div class="panel-body">
-						<!-- Modal -->
-						<div class="modal fade" id="addbusiness" tabindex="-1" role="dialog" aria-labelledby="addbusiness" aria-hidden="true">
-							<div class="modal-dialog" role="document">
+				</div>
+			</div>
+			<div class="panel-body">
+					<!-- Modal -->
+					<div class="modal fade" id="addbusiness" tabindex="-1" role="dialog" aria-labelledby="addbusiness" aria-hidden="true">
+						<div class="modal-dialog" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
 								<h5 class="modal-title" id="addbusiness">Add a Business</h5>
@@ -115,55 +133,52 @@
 												<option>Services</option>
 											</select>
 										</div>
-										
-												
 									</form><!--form-->
 								</div>
 								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-primary">Create</button>
-								</div>
-							</div>
-							</div>
-						</div><!--modal-->
-						<div class="row">
-							<div class="col-lg-4 col-md-4 col-sm-6">
-								<div class="biz-header"></div>
-								<div class="biz-body">
-									hdhdhd
-								</div>
-								<div class="biz-footer">
-
-								</div>
-							</div>
-							<div class="col-lg-4 col-md-4 col-sm-6">
-									<div class="biz-header"></div>
-									<div class="biz-body">
-											hdhdhd
-									</div>
-									<div class="biz-footer">
-	
-									</div>
-							</div>
-							<div class="col-lg-4 col-md-4 col-sm-6">
-								<div class="biz-header"></div>
-								<div class="biz-body">
-										hdhdhd
-								</div>
-								<div class="biz-footer">
-		
+									<button type="button" class="btn btn-warning btn-lg" data-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-info btn-lg">Create</button>
 								</div>
 							</div>
 						</div>
-
-					</div><!--panel-body-->
+					</div><!--modal-->
+			<div class="main">
+				<div class="widget">
+					<div class="title">Google</div>
+					<div class="widget-body">
+						<div class="text-center">
+							<img src="images/google.png" class="img-fluid" alt="Google, Inc. Logo">
+						</div>
+					</div>
+					<div class="widget-footer">
+						<a role="button" href="business.html" class="btn btn-warning btn-lg spull-left">View Profile</a>
+					</div>
+				</div>
+				<div class="widget">
+					<div class="title">Amazon</div>
+					<div class="widget-body">
+							<div class="text-center">
+									<img src="images/amazon.png" class="img-fluid" alt="Amazon, Inc. Logo">
+								</div>
+					</div>
+					<div class="widget-footer">
+						<a role="button" href="business.html" class="btn btn-warning btn-lg pull-left">View Profile</a>
+					</div>
+				</div>
+				<div class="widget">
+					<div class="title">Apple</div>
+					<div class="widget-body">
+						<div class="text-center">
+							<img src="images/apple.png" class="img-fluid" alt="Apple, Inc. Logo">
+						</div>
+					</div>
+					<div class="widget-footer">
+						<a role="button" href="business.html" class="btn btn-warning btn-lg pull-left">View Profile</a>
+					</div>
 				</div>
 				
 			</div>
 		</div>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- 		 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-		<script src="js/main.js"></script>
+		
 	</body>
 </html>
