@@ -101,7 +101,7 @@ class UserAuthClass(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("out", response_msg["Message"])
 
-    """At this stage previous test data needs to be cleared"""
+    # At this stage previous test data needs to be cleared
 
     def tearDown(self):
         """ clear data after every test"""
@@ -112,7 +112,7 @@ class UserAuthClass(TestSetUp):
         self.app.post('/api/v1/auth/register', data=json.dumps(self.user),
                       headers={"content-type": "application/json"})
 
-        """login the just registered user and get a token"""
+        # login the just registered user and get a token
         self.login = self.app.post(
             '/api/v1/auth/login',
             data=json.dumps(
@@ -120,7 +120,7 @@ class UserAuthClass(TestSetUp):
             content_type='application/json')
         self.data = json.loads(self.login.get_data(as_text=True))
         self.token = self.data['token']
-        """Then reset their password with the new token"""
+        # Then reset their password with the new token
         response = self.app.put(
             '/api/v1/auth/reset-password',
             data=json.dumps(

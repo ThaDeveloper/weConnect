@@ -1,6 +1,5 @@
 import os
 import json
-import unittest
 import sys
 import inspect
 
@@ -9,7 +8,6 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from tests.setup import TestSetUp
-from src.views import business_object
 
 
 class TestBusinessClassFunctionality(TestSetUp):

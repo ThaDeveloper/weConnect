@@ -1,6 +1,5 @@
 import os
 import json
-import unittest
 import sys
 import inspect
 currentdir = os.path.dirname(os.path.abspath(
