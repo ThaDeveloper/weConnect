@@ -1,7 +1,4 @@
-import os
 import json
-import sys
-import inspect
 import unittest
 
 from tests.test_setup import TestSetUp

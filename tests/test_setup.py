@@ -1,8 +1,5 @@
-import os
 import json
 import unittest
-import sys
-import inspect
 
 from src.views import app
 

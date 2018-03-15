@@ -1,8 +1,5 @@
 import unittest
 import json
-import os
-import sys
-import inspect
 
 from tests.test_setup import TestSetUp
 from src.views import user_object
