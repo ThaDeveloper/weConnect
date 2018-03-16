@@ -90,7 +90,7 @@ class UserAuthClass(TestSetUp):
             '/api/v1/auth/logout',
             headers={
                 "x-access-token": self.token})
-        self.assertEqual(response.status_code, 202)
+        self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("out", response_msg["Message"])
 

@@ -1,7 +1,7 @@
 import os
 import sys
 import inspect
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import datetime
@@ -11,17 +11,16 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from src.models import User, Business, Reviews
-
-
-app = Flask(__name__)
+from src import app
 
 
 """Instances of User and Business class"""
 user_object = User()
 business_object = Business()
 review_object = Reviews()
-
-app.config['SECRET_KEY'] = 'doordonotthereisnotry'
+"""Initialize blueprint decorators"""
+auth = Blueprint('user', __name__)
+biz = Blueprint('business', __name__)
 
 
 def token_required(f):
@@ -37,7 +36,7 @@ def token_required(f):
             return jsonify({'Message': 'You need to log in'}), 401
 
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, os.getenv('SECRET_KEY'))
             if data['username'] in user_object.u_token:
                 current_user = user_object.users[data['username']]
             else:
@@ -50,7 +49,7 @@ def token_required(f):
     return decorated
 
 
-@app.route('/api/v1/auth/register', methods=['POST'])
+@auth.route('/register', methods=['POST'])
 def create_user():
     """receive user input as json object"""
     data = request.get_json()
@@ -67,7 +66,7 @@ def create_user():
     return jsonify({"Message": "User registered successfully"}), 201
 
 
-@app.route('/api/v1/auth/login', methods=['POST'])
+@auth.route('/login', methods=['POST'])
 def login():
     """Log in and generate token"""
     auth = request.get_json()
@@ -80,24 +79,29 @@ def login():
 
     user = user_object.users[auth['username']]
     if check_password_hash(user['password'], auth['password']):
+        session['loggedin'] = True
+        session['username'] = auth['username']
         token = jwt.encode({'username': user['username'],
                             'exp': datetime.datetime.utcnow() +
                             datetime.timedelta(minutes=20)},
-                           app.config['SECRET_KEY'])
+                           os.getenv('SECRET_KEY'))
         user_object.u_token[user['username']] = token
         return jsonify({"token": token.decode('UTF-8')}), 200
 
     return jsonify({"Message": "login invalid!"}), 401
 
 
-@app.route('/api/v1/auth/logout', methods=['DELETE'])
+@auth.route('/logout', methods=['DELETE'])
 @token_required
 def logout(current_user):
-    session.clear()
-    return jsonify({"Message": "Logged out"}), 202
+    """Destroy user session"""
+    if session and session['loggedin']:
+        session.clear()
+        return jsonify({"Message": "logged out"}), 200
+    return jsonify({"Message": "Already logged out"}), 404
 
 
-@app.route('/api/v1/auth/reset-password', methods=['PUT'])
+@auth.route('/reset-password', methods=['PUT'])
 @token_required
 def reset_password(current_user):
     """
@@ -110,13 +114,13 @@ def reset_password(current_user):
     return jsonify({"Message": "password updated"}), 202
 
 
-@app.route('/api/v1/auth/users', methods=['GET'])
+@auth.route('/users', methods=['GET'])
 @token_required
 def get_all_users(current_user):
     return jsonify({"users": user_object.users}), 200
 
 
-@app.route('/api/v1/businesses', methods=['POST'])
+@biz.route('/businesses', methods=['POST'])
 @token_required
 def create_business(current_user):
     """Logged in users to create business"""
@@ -133,7 +137,7 @@ def create_business(current_user):
     return jsonify({"Message": "Business registered successfully"}), 201
 
 
-@app.route('/api/v1/businesses/<int:business_id>', methods=['GET'])
+@biz.route('/businesses/<int:business_id>', methods=['GET'])
 def get_one_business(business_id):
     """Return a single business"""
     response = business_object.find_business_by_id(business_id)
@@ -142,7 +146,7 @@ def get_one_business(business_id):
     return jsonify({"Message": "Business not found"}), 404
 
 
-@app.route('/api/v1/businesses/<int:business_id>', methods=['PUT'])
+@biz.route('/businesses/<int:business_id>', methods=['PUT'])
 @token_required
 def get_update_business(current_user, business_id):
     """
@@ -168,12 +172,12 @@ def get_update_business(current_user, business_id):
     return jsonify({'Message': 'Business not found'}), 404
 
 
-@app.route('/api/v1/businesses', methods=['GET'])
+@biz.route('/businesses', methods=['GET'])
 def get_all_businesses():
     return jsonify({"businesses": business_object.businesses}), 200
 
 
-@app.route('/api/v1/businesses/<int:business_id>', methods=['DELETE'])
+@biz.route('/businesses/<int:business_id>', methods=['DELETE'])
 @token_required
 def remove_business(current_user, business_id):
     """Remove business by id"""
@@ -188,7 +192,7 @@ def remove_business(current_user, business_id):
     return jsonify({"Message": "Business not found"}), 404
 
 
-@app.route('/api/v1/businesses/<int:business_id>/reviews', methods=['POST'])
+@biz.route('/businesses/<int:business_id>/reviews', methods=['POST'])
 @token_required
 def create_review(current_user, business_id):
     """ User can only review a business if logged in"""
@@ -208,7 +212,7 @@ def create_review(current_user, business_id):
     return jsonify({"Message": "Business not found"}), 401
 
 
-@app.route('/api/v1/businesses/<int:business_id>/reviews', methods=['GET'])
+@biz.route('/businesses/<int:business_id>/reviews', methods=['GET'])
 @token_required
 def get_business_reviews(current_user, business_id):
     """List all business' reviews"""
@@ -217,7 +221,3 @@ def get_business_reviews(current_user, business_id):
         reviews = review_object.get_reviews(business_id)
         return jsonify({"Reviews": reviews}), 200
     return jsonify({"Message": "Business not found"})
-
-
-if __name__ == '__main__':
-    app.run(debug=False)

@@ -4,7 +4,7 @@ import os
 class BaseConfig(object):
     """docstring for Config"""
     DEBUG = False
-    SECRET = os.getenv('SECRET_KEY')
+    SECRET_KEY = os.getenv('SECRET')
 
 
 class Development(BaseConfig):
