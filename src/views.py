@@ -11,14 +11,10 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from src.models import User, Business, Reviews
-from src import app
 
-
-"""Instances of User and Business class"""
 user_object = User()
 business_object = Business()
 review_object = Reviews()
-"""Initialize blueprint decorators"""
 auth = Blueprint('user', __name__)
 biz = Blueprint('business', __name__)
 

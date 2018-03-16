@@ -5,6 +5,7 @@ all_reviews = []
 
 class User(object):
     """Store user data in dictionaries"""
+
     def __init__(self):
         self.users = {}
         self.u_token = {}
@@ -31,7 +32,7 @@ class Business(object):
                           category,
                           user_id):
         """Adds a new  business to businesses dictionary"""
-        new_business = {'business_id': len(self.businesses)+1,
+        new_business = {'business_id': len(self.businesses) + 1,
                         'name': name,
                         'description': description,
                         'location': location,
