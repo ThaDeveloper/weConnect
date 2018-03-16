@@ -1,8 +1,7 @@
 import os
 import sys
 import inspect
-from flask import Flask, request, jsonify, make_response, session, Blueprint
-import uuid
+from flask import Flask, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import datetime
@@ -12,7 +11,6 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from src.models import User, Business, Reviews
-from src.config import app_config
 
 
 app = Flask(__name__)

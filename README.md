@@ -68,7 +68,7 @@ On the weConnect directory
 2. Install project dependencies
 `$ pip install -r requirements.txt`
 
-Finally run `$ python views.py`
+Finally run `$ python3 views.py`
 
 ### Testing
 Run command 

@@ -1,13 +1,7 @@
-import os
 import json
 import unittest
-import sys
-import inspect
-currentdir = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
-from tests.setup import TestSetUp
+
+from tests.test_setup import TestSetUp
 
 
 class TestReviewsClassFunctionality(TestSetUp):
@@ -46,23 +40,5 @@ class TestReviewsClassFunctionality(TestSetUp):
         self.assertEqual(response.status_code, 200)
 
 
-"""These tests will be for future version of the api"""
-#     def test_delete_review(self):
-#         """Tests a review can be deleted."""
-#         response = self.app.delete("/api/businesses/1/reviews/1",
-#                                       content_type="application/json",
-#                                       headers={'Authorization': 'Token '
-#                                        + self.token})
-#         self.assertEqual(response.status_code, 200)
-#         response_msg = json.loads(response.data)
-#         self.assertIn("deleted", response_msg["Message"])
-
-#     def test_invalid_delete(self):
-#         """Tests error raised for an invalid delete request."""
-#         response = self.app.delete("/api/businesses/1/reviews/2",
-#                                       content_type="application/json",
-#                                       headers={'Authorization': 'Token '
-#                                        + self.token})
-#         self.assertEqual(response.status_code, 404)
-#         response_msg = json.loads(response.data)
-#         self.assertIn("not found", response_msg["Message"])
+if __name__ == "__main__":
+    unittest.main()

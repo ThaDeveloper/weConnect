@@ -1,15 +1,7 @@
-import os
 import json
 import unittest
-import sys
-import inspect
 
-currentdir = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
-from tests.setup import TestSetUp
-from src.views import business_object
+from tests.test_setup import TestSetUp
 
 
 class TestBusinessClassFunctionality(TestSetUp):
@@ -150,26 +142,6 @@ class TestBusinessClassFunctionality(TestSetUp):
         self.assertEqual(response.status_code, 401)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Invalid", response_msg["Message"])
-
-
-"""Tests for future API version"""
-#     def test_search_by_business_name(self):
-#         """Tests user can search for business."""
-#         response = self.app.get("/api/v1/businesses/?q=testbusiness",
-#                                    content_type="application/json",
-#                                    headers={"x-access-token": self.token})
-#         self.assertEqual(response.status_code, 200)
-#         response_msg = json.loads(response.data.decode("UTF-8"))
-#         self.assertEqual("testbusiness", response_msg["Businesses"][0]["name"])
-
-#     def test_invalid_search(self):
-#         """ Tests for invalid business search."""
-#         response = self.app.get("/api/businesses/?q=invalid",
-#                                    content_type="application/json",
-#                                    headers={"x-access-token": self.token})
-#         self.assertEqual(response.status_code, 404)
-#         response_msg = json.loads(response.data.decode("UTF-8"))
-#         self.assertIn("not found", response_msg["Message"])
 
 
 if __name__ == "__main__":
