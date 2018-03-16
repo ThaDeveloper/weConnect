@@ -1,6 +1,12 @@
 import json
 import unittest
-
+import os
+import sys
+import inspect
+currentdir = os.path.dirname(os.path.abspath(
+inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
 from tests.test_setup import TestSetUp
 
 
@@ -8,6 +14,10 @@ class TestReviewsClassFunctionality(TestSetUp):
 
     def test_add_new_review(self):
         """Tests a new review can be added."""
+        self.app.post('/api/v1/businesses',
+                                 data=json.dumps(self.business),
+                                 content_type="application/json",
+                                 headers={"x-access-token": self.token})
         response = self.app.post(
             "/api/v1/businesses/1/reviews",
             data=json.dumps(
