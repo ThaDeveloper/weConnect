@@ -49,6 +49,16 @@ class UserAuthClass(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("required", response_msg["Message"])
 
+    def test_wrong_username_format(self):
+        """Tests error raised when wrong username format is provided."""
+        response = self.app.post("/api/v1/auth/register",
+                                 data=json.dumps(dict(username=1234,
+                                                      password="testpass")),
+                                 content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Wrong", response_msg["Message"])
+
     def test_duplicate_users(self):
         """
         Tests for duplicate usernames
@@ -100,8 +110,21 @@ class UserAuthClass(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("out", response_msg["Message"])
 
-    # At this stage previous test data needs to be cleared
+    def test_double_logout(self):
+        """Test Re-logout"""
+        self.app.delete(
+            '/api/v1/auth/logout',
+            headers={
+                "x-access-token": self.token})
+        response = self.app.delete(
+            '/api/v1/auth/logout',
+            headers={
+                "x-access-token": self.token})
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Already", response_msg["Message"])
 
+    # At this stage previous test data needs to be cleared
     def tearDown(self):
         """ clear data after every test"""
         user_object.users.clear()

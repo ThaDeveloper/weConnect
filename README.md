@@ -63,16 +63,16 @@ bile_version.png "Mobile version")
 ### Installation
 1. Create a [virtual environment](http://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv)
 `$ virtualenv envname` and then `$ source envname/bin/activate`
-On the weConnect directory
 
+On the weConnect directory
 2. Install project dependencies
 `$ pip install -r requirements.txt`
 
-Finally run `$ python3 views.py`
+Finally run `$ flask run`
 
 ### Testing
 Run command 
-`$ nosetests tests --with-coverage --cover-package=src`
+`$ pytest`
 
 ### API Endpoints
 #### To note

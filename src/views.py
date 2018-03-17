@@ -36,7 +36,7 @@ def token_required(f):
             if data['username'] in user_object.u_token:
                 current_user = user_object.users[data['username']]
             else:
-                return jsonify({"Message": "Token expired:Login again"})
+                return jsonify({"Message": "Token expired:Login again"}), 401
         except BaseException:
             return jsonify({'Message': 'Invalid request!'}), 401
 
@@ -57,7 +57,7 @@ def create_user():
                         "Username and Password is required"}), 400
     if not isinstance(data['username'], str):
         return jsonify({"Message":
-                        "Wrong username format: Can only be a string"})
+                        "Wrong username format: Can only be a string"}), 400
     data = user_object.create_user(data['username'], password_hash)
     return jsonify({"Message": "User registered successfully"}), 201
 
@@ -94,7 +94,7 @@ def logout(current_user):
     if session and session['loggedin']:
         session.clear()
         return jsonify({"Message": "logged out"}), 200
-    return jsonify({"Message": "Already logged out"}), 404
+    return jsonify({"Message": "Already logged out"}), 400
 
 
 @auth.route('/reset-password', methods=['PUT'])
@@ -216,4 +216,4 @@ def get_business_reviews(current_user, business_id):
     if business:
         reviews = review_object.get_reviews(business_id)
         return jsonify({"Reviews": reviews}), 200
-    return jsonify({"Message": "Business not found"})
+    return jsonify({"Message": "Business not found"}), 401

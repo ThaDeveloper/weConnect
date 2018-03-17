@@ -33,5 +33,6 @@ class TestSetUp(unittest.TestCase):
         self.login = self.app.post('/api/v1/auth/login',
                                    data=json.dumps(self.logins),
                                    content_type='application/json')
+        
         self.data = json.loads(self.login.get_data(as_text=True))
         self.token = self.data['token']

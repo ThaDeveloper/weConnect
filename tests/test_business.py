@@ -100,6 +100,29 @@ class TestBusinessClassFunctionality(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("not found", response_msg["Message"])
 
+    def test_updating_unauthorized_business(self):
+        """Tests error raised when updating someone else's business."""
+        self.unknownuser = {"username": "unkownuser", "password": "password"}
+        self.app.post(
+            "/api/v1/auth/register",
+            data=json.dumps(
+                self.unknownuser),
+            content_type="application/json")
+        self.unkownlogin = self.app.post("/api/v1/auth/login",
+                                         data=json.dumps(self.unknownuser),
+                                         content_type="application/json")
+        self.data = json.loads(self.unkownlogin.get_data(as_text=True))
+        self.unkowntoken = self.data['token']
+
+        response = self.app.put("/api/v1/businesses/1",
+                                data=json.dumps(self.new_business),
+                                content_type="application/json",
+                                headers={"x-access-token": self.unkowntoken})
+
+        self.assertEqual(response.status_code, 401)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Unauthorized", response_msg["Message"])
+
     def test_duplicate_updates(self):
         """
         Tests for updating business to a name that already exists.
@@ -131,6 +154,32 @@ class TestBusinessClassFunctionality(TestSetUp):
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("deleted", response_msg["Message"])
+
+    def test_deleting_unauthorized_business(self):
+        """Tests error raised when deleting someone else's business."""
+        self.unknownuser = {"username": "unkownuser", "password": "password"}
+        self.app.post(
+            "/api/v1/auth/register",
+            data=json.dumps(
+                self.unknownuser),
+            content_type="application/json")
+        self.unkownlogin = self.app.post("/api/v1/auth/login",
+                                         data=json.dumps(self.unknownuser),
+                                         content_type="application/json")
+        self.data = json.loads(self.unkownlogin.get_data(as_text=True))
+        self.unkowntoken = self.data['token']
+
+        response = self.app.delete(
+            "/api/v1/businesses/1",
+            data=json.dumps(
+                self.new_business),
+            content_type="application/json",
+            headers={
+                "x-access-token": self.unkowntoken})
+
+        self.assertEqual(response.status_code, 401)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("Unauthorized", response_msg["Message"])
 
     def test_invalid_delete(self):
         """Error raised for invalid delete request."""

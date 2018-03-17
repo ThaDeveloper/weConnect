@@ -31,6 +31,21 @@ class TestReviewsClassFunctionality(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("recorded", response_msg["Message"])
 
+    def test_review_missing_business(self):
+        """Tests a cannot review non-existing business."""
+        response = self.app.post(
+            "/api/v1/businesses/2/reviews",
+            data=json.dumps(
+                dict(
+                    title="testbusinessreview",
+                    message="I love working here")),
+            content_type="application/json",
+            headers={
+                "x-access-token": self.token})
+        self.assertEqual(response.status_code, 401)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("not found", response_msg["Message"])
+
     def test_missing_title(self):
         """Tests error raised for misisng review title."""
         response = self.app.post("/api/v1/businesses/1/reviews",
@@ -48,6 +63,15 @@ class TestReviewsClassFunctionality(TestSetUp):
                                 content_type="application/json",
                                 headers={"x-access-token": self.token})
         self.assertEqual(response.status_code, 200)
+
+    def test_get_reviews_for_missing_business(self):
+        """Tests error raised for accessing reviews for missing business."""
+        response = self.app.get("/api/v1/businesses/2/reviews",
+                                content_type="application/json",
+                                headers={"x-access-token": self.token})
+        self.assertEqual(response.status_code, 401)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("not found", response_msg["Message"])
 
 
 if __name__ == "__main__":
