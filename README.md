@@ -45,6 +45,6 @@ Ensure you have bootstrap 3.3.7 or later.( Can download or use available CDNs.Re
 ### Mobile version
 
 ![alt text](https://github.com/ThaDeveloper/weConnect/blob/challenge1/designs/documentation/snapshots/mobile_version.png "Mobile version")
-bile_version.png "Mobile version")
+
 
 
