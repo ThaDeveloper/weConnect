@@ -74,7 +74,7 @@ class UserAuthClass(TestSetUp):
     def test_valid_login_generates_token(self):
         """Tests token is generated on successful login."""
         response = self.app.post("/api/v1/auth/login",
-                                 data=json.dumps(self.logins),
+                                 data=json.dumps(self.user),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -138,7 +138,7 @@ class UserAuthClass(TestSetUp):
         self.login = self.app.post(
             '/api/v1/auth/login',
             data=json.dumps(
-                self.logins),
+                self.user),
             content_type='application/json')
         self.data = json.loads(self.login.get_data(as_text=True))
         self.token = self.data['token']

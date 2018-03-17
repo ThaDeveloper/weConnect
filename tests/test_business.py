@@ -102,18 +102,6 @@ class TestBusinessClassFunctionality(TestSetUp):
 
     def test_updating_unauthorized_business(self):
         """Tests error raised when updating someone else's business."""
-        self.unknownuser = {"username": "unkownuser", "password": "password"}
-        self.app.post(
-            "/api/v1/auth/register",
-            data=json.dumps(
-                self.unknownuser),
-            content_type="application/json")
-        self.unkownlogin = self.app.post("/api/v1/auth/login",
-                                         data=json.dumps(self.unknownuser),
-                                         content_type="application/json")
-        self.data = json.loads(self.unkownlogin.get_data(as_text=True))
-        self.unkowntoken = self.data['token']
-
         response = self.app.put("/api/v1/businesses/1",
                                 data=json.dumps(self.new_business),
                                 content_type="application/json",
@@ -157,18 +145,6 @@ class TestBusinessClassFunctionality(TestSetUp):
 
     def test_deleting_unauthorized_business(self):
         """Tests error raised when deleting someone else's business."""
-        self.unknownuser = {"username": "unkownuser", "password": "password"}
-        self.app.post(
-            "/api/v1/auth/register",
-            data=json.dumps(
-                self.unknownuser),
-            content_type="application/json")
-        self.unkownlogin = self.app.post("/api/v1/auth/login",
-                                         data=json.dumps(self.unknownuser),
-                                         content_type="application/json")
-        self.data = json.loads(self.unkownlogin.get_data(as_text=True))
-        self.unkowntoken = self.data['token']
-
         response = self.app.delete(
             "/api/v1/businesses/1",
             data=json.dumps(

@@ -16,7 +16,7 @@ class TestSetUp(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.user = {"username": "testuser", "password": "testpass"}
-        self.logins = {"username": "testuser", "password": "testpass"}
+        self.unknownuser = {"username": "unkownuser", "password": "password"}
         self.business = {"name": "Google",
                          "description": "Its awesome",
                          "location": "CA",
@@ -31,8 +31,18 @@ class TestSetUp(unittest.TestCase):
                                       headers={"content-type":
                                                "application/json"})
         self.login = self.app.post('/api/v1/auth/login',
-                                   data=json.dumps(self.logins),
+                                   data=json.dumps(self.user),
                                    content_type='application/json')
         
         self.data = json.loads(self.login.get_data(as_text=True))
         self.token = self.data['token']
+        self.app.post(
+            "/api/v1/auth/register",
+            data=json.dumps(
+                self.unknownuser),
+            content_type="application/json")
+        self.unkownlogin = self.app.post("/api/v1/auth/login",
+                                         data=json.dumps(self.unknownuser),
+                                         content_type="application/json")
+        self.data = json.loads(self.unkownlogin.get_data(as_text=True))
+        self.unkowntoken = self.data['token']
