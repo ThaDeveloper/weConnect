@@ -1,6 +1,6 @@
 from src import db
-from passlib.hash import sha256_crypt
-
+from werkzeug.security import generate_password_hash, check_password_hash
+import uuid
 
 class User(db.Model):
     """Create users table
@@ -11,9 +11,10 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    admin = (db.Boolean)
+    public_id = db.Column(db.String(50), unique=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(80), nullable=False)
+    admin = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(
         db.DateTime,
@@ -38,7 +39,8 @@ class User(db.Model):
         Admin privellege is set to false by default
         """
         self.username = username.lower().strip()
-        self.password = sha256_crypt.encrypt(str(password))
+        self.password = generate_password_hash(password, method='sha256')
+        self.public_id = str(uuid.uuid4())
         self.admin = False
 
     def add(self):

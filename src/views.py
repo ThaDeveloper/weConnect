@@ -12,9 +12,6 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from src.models import User, Business, Review
 
-user_object = User()
-business_object = Business()
-review_object = Review()
 auth = Blueprint('user', __name__)
 biz = Blueprint('business', __name__)
 
@@ -49,18 +46,59 @@ def token_required(f):
 def create_user():
     """receive user input as json object"""
     data = request.get_json()
-    password_hash = generate_password_hash(data['password'], method='sha256')
-    if data['username'] in user_object.users:
-        return jsonify({'Message': "User already exists"}), 400
-    if data['username'] == "" or data['password'] == "":
-        return jsonify({'Message':
-                        "Username and Password is required"}), 400
-    if not isinstance(data['username'], str):
-        return jsonify({"Message":
-                        "Wrong username format: Can only be a string"}), 400
-    data = user_object.create_user(data['username'], password_hash)
+    print(data)
+    new_user = User(username=data['username'], password=data['password'])
+    res = new_user.add()
+   
+    # if data['username'] in users.filter_by_id(id=1):
+    #     return jsonify({'Message': "User already exists"}), 400
+    # if data['username'] == "" or data['password'] == "":
+    #     return jsonify({'Message':
+    #                     "Username and Password is required"}), 400
+    # if not isinstance(data['username'], str):
+    #     return jsonify({"Message":
+    #                     "Wrong username format: Can only be a string"}), 400
+    # data = user_object.create_user(data['username'], password_hash)
     return jsonify({"Message": "User registered successfully"}), 201
 
+
+@auth.route('/users', methods=['GET'])
+# @token_required
+def get_all_users():
+    users = User.query.all()
+    output = []
+    for user in users:
+        user_data = {}
+        user_data['id'] = user.id
+        user_data['public_id'] = user.public_id
+        user_data['username'] = user.username
+        user_data['password'] = user.password
+        user_data['admin']  = user.admin
+        output.append(user_data)
+    return jsonify({"users": output}), 200
+
+
+@auth.route('/users/<id>', methods=['GET'])
+def get_user(id):
+    user = User.query.filter_by(id=id).first()
+    if not user:
+        return jsonify({'Message' : 'User not found'})
+    user_data = {}
+    user_data['id'] = user.id
+    user_data['public_id'] = user.public_id
+    user_data['username'] = user.username
+    user_data['password'] = user.password
+    user_data['admin']  = user.admin
+    return jsonify({'user': user_data}), 200
+
+@auth.route('/users/<id>', methods=['PUT'])
+def promote_user(id):
+    user = User.query.filter_by(id=id).first()
+    if not user:
+        return jsonify({'Message' : 'User not found'})
+    user.admin = True
+    user.add()
+    return jsonify({'Message': 'User is now an admin'})
 
 @auth.route('/login', methods=['POST'])
 def login():
@@ -108,12 +146,6 @@ def reset_password(current_user):
     usr = user_object.users[current_user["username"]]
     usr.update({"password": password_hash})
     return jsonify({"Message": "password updated"}), 202
-
-
-@auth.route('/users', methods=['GET'])
-@token_required
-def get_all_users(current_user):
-    return jsonify({"users": user_object.users}), 200
 
 
 @biz.route('/businesses', methods=['POST'])
