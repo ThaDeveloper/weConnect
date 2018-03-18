@@ -1,80 +1,122 @@
-import uuid
-
-all_reviews = []
-
-
-class User(object):
-    """Store user data in dictionaries"""
-
-    def __init__(self):
-        self.users = {}
-        self.u_token = {}
-
-    def create_user(self, username, password, admin=False):
-        """Creates a new user an append to the list of users"""
-        data = {'id': uuid.uuid4(),
-                'username': username,
-                'password': password,
-                'admin': admin}
-        self.users[username] = data
-        return self.users
+from src import db
+from passlib.hash import sha256_crypt
 
 
-class Business(object):
-    """Store business data in dictionaries"""
+class User(db.Model):
+    """Create users table
+    One-to-Many relationship with review and business
+    User has many businessess
+    User has many reviews
+    """
+    __tablename__ = 'users'
 
-    def __init__(self):
-        self.businesses = {}
+    id = db.Column(db.Integer, primary_key=True)
+    admin = (db.Boolean)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    password = db.Column(db.String(50), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp()
+    )
+    businesses = db.relationship(
+        'Business',
+        backref='owner',
+        cascade='all, delete-orphan'
+    )
+    reviews = db.relationship(
+        'Review',
+        backref='reviewer',
+        cascade='all, delete-orphan'
+    )
 
-    def register_business(self, name,
-                          description,
-                          location,
-                          category,
-                          user_id):
-        """Adds a new  business to businesses dictionary"""
-        new_business = {'business_id': len(self.businesses) + 1,
-                        'name': name,
-                        'description': description,
-                        'location': location,
-                        'category': category,
-                        'user_id': user_id}
-        self.businesses[name] = new_business
-        return self.businesses
+    def __init__(self, username, password):
+        """Initialize a user instance
+        usernames are stripped off any spaces and case set to lower
+        Passwords are encrypted before saving to db
+        Admin privellege is set to false by default
+        """
+        self.username = username.lower().strip()
+        self.password = sha256_crypt.encrypt(str(password))
+        self.admin = False
 
-    def find_business_by_id(self, business_id):
-        if self.businesses:
-            for business in self.businesses.values():
-                if business.get('business_id') == business_id:
-                    return business
+    def add(self):
+        """Add user to the database"""
+        db.session.add(self)
+        db.session.commit()
 
-    def update_business(self, business_id, name, description):
-        if self.businesses:
-            for business in self.businesses.values():
-                if business.get('business_id') == business_id:
-                    business['name'] = name
-                    business['description'] = description
-                    return business
+    def delete(self):
+        """Delete a user from the database"""
+        db.session.add(self)
+        db.session.commit()
 
 
-class Reviews(object):
-    """Modeling the Reviews endpoint for data storage"""
+class Business(db.Model):
+    """Create table businesses
+    a business belongs to user
+    a business has many reviews
+    """
+    __tablename__ = 'businesses'
 
-    def __init__(self):
-        self.reviews = {}
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), index=True, nullable=False)
+    logo = db.Column(db.String())
+    description = db.Column(db.String())
+    category = db.Column(db.String(50), index=True)
+    location = db.Column(db.String(50), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp()
+    )
+    reviews = db.relationship(
+        'Review',
+        backref='business',
+        cascade='all, delete-orphan'
+    )
 
-    def add_review(self, title, message, user_id, business_id):
-        """ Creates a new review for businesses"""
-        new_review = {
-            'id': str(uuid.uuid4()),
-            'title': title,
-            'message': message,
-            'user_id': user_id,
-            'business_id': business_id
-        }
-        self.reviews[id] = new_review
+    def add(self):
+        """Add a business to the database"""
+        db.session.add(self)
+        db.session.commit()
 
-    def get_reviews(self, business_id):
-        for review in self.reviews.values():
-            if review['business_id'] == business_id:
-                all_reviews.append(review)
-                return all_reviews
+    def delete(self):
+        """Delete a business"""
+        db.session.delete(self)
+        db.session.commit()
+
+
+class Review(db.Model):
+    """Create table reviews
+    a review belongs to a business
+    a review belongs to a user
+    """
+    __tablename__ = 'reviews'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(), nullable=False)
+    message = db.Column(db.String())
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp()
+    )
+    business_id = db.Column(
+        db.Integer,
+        db.ForeignKey('businesses.id'),
+    )
+
+    def add(self):
+        """Add a review to the database"""
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        """Delete a review."""
+        db.session.delete(self)
+        db.session.commit()

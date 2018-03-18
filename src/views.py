@@ -10,11 +10,11 @@ currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from src.models import User, Business, Reviews
+from src.models import User, Business, Review
 
 user_object = User()
 business_object = Business()
-review_object = Reviews()
+review_object = Review()
 auth = Blueprint('user', __name__)
 biz = Blueprint('business', __name__)
 

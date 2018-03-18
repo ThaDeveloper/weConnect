@@ -4,7 +4,9 @@ import os
 class BaseConfig(object):
     """docstring for Config"""
     DEBUG = False
+    CSRF_ENABLED = True
     SECRET_KEY = os.getenv('SECRET')
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 
 
 class Development(BaseConfig):
