@@ -1,6 +1,8 @@
 from src import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
+from src.utils import ValidationError
+
 
 class User(db.Model):
     """Create users table
@@ -90,6 +92,17 @@ class Business(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def import_data(self, data):
+        """Validates request data from user"""
+        try:
+            if len(data["name"].strip()) == 0:
+                return "Invalid"
+            else:
+                self.name = data["name"]
+        except KeyError as e:
+            raise ValidationError("Invalid: Field required: " + e.args[0])
+        return self
+
 
 class Review(db.Model):
     """Create table reviews
@@ -122,3 +135,14 @@ class Review(db.Model):
         """Delete a review."""
         db.session.delete(self)
         db.session.commit()
+
+    def import_data(self, data):
+        """Validates request data from user"""
+        try:
+            if len(data["title"].strip()) == 0:
+                return "Invalid"
+            else:
+                self.name = data["title"]
+        except KeyError as e:
+            raise ValidationError("Invalid: Field required: " + e.args[0])
+        return self
