@@ -192,5 +192,13 @@ class UserAuthClass(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("admin", response_msg["Message"])
 
+    def test_delete_user(self):
+        """Tests deleting user from db"""
+        response = self.app.delete('/api/v1/auth/users/1',
+                                content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("deleted", response_msg["Message"])
+
 if __name__ == '__main__':
     unittest.main()

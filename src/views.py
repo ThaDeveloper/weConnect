@@ -6,11 +6,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import datetime
 from functools import wraps
+import re
 currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from src.models import User, Business, Review
+from src.utils import validate_user
+from src import db
 
 auth = Blueprint('user', __name__)
 biz = Blueprint('business', __name__)
@@ -44,22 +47,17 @@ def token_required(f):
 
 @auth.route('/register', methods=['POST'])
 def create_user():
-    """receive user input as json object"""
+    """Receive user input as json object"""
     data = request.get_json()
-    print(data)
+    if validate_user(data):
+        return validate_user(data)
     new_user = User(username=data['username'], password=data['password'])
-    res = new_user.add()
-   
-    # if data['username'] in users.filter_by_id(id=1):
-    #     return jsonify({'Message': "User already exists"}), 400
-    # if data['username'] == "" or data['password'] == "":
-    #     return jsonify({'Message':
-    #                     "Username and Password is required"}), 400
-    # if not isinstance(data['username'], str):
-    #     return jsonify({"Message":
-    #                     "Wrong username format: Can only be a string"}), 400
-    # data = user_object.create_user(data['username'], password_hash)
-    return jsonify({"Message": "User registered successfully"}), 201
+    # check for duplicates before creating the new user
+    duplicate = User.query.filter_by(username=new_user.username).first()
+    if not duplicate:
+        new_user.add()
+        return jsonify({"Message": "User registered successfully"}), 201
+    return jsonify({"Message": "User already exist"}), 400
 
 
 @auth.route('/users', methods=['GET'])
@@ -98,7 +96,15 @@ def promote_user(id):
         return jsonify({'Message' : 'User not found'})
     user.admin = True
     user.add()
-    return jsonify({'Message': 'User is now an admin'})
+    return jsonify({'Message': 'User is now an admin'}), 200
+
+@auth.route('/users/<id>', methods=['DELETE'])
+def remove_user(id):
+    user = User.query.filter_by(id=id).first()
+    if not user:
+        return jsonify({'Message' : 'User not found'})
+    user.delete()
+    return jsonify({'Message': 'User deleted successfully'}), 200
 
 @auth.route('/login', methods=['POST'])
 def login():

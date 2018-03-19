@@ -40,7 +40,7 @@ class User(db.Model):
         Passwords are encrypted before saving to db
         Admin privellege is set to false by default
         """
-        self.username = username.lower().strip()
+        self.username = username.strip()
         self.password = generate_password_hash(password, method='sha256')
         self.public_id = str(uuid.uuid4())
         self.admin = False
@@ -52,7 +52,7 @@ class User(db.Model):
 
     def delete(self):
         """Delete a user from the database"""
-        db.session.add(self)
+        db.session.delete(self)
         db.session.commit()
 
 
