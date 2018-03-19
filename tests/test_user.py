@@ -8,7 +8,6 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from tests.test_setup import TestSetUp
-from src.views import user_object
 
 
 class UserAuthClass(TestSetUp):
@@ -39,6 +38,26 @@ class UserAuthClass(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("required", response_msg["Message"])
 
+    def test_username_has_space(self):
+        """Tests error raised when username contains spaces."""
+        response = self.app.post("/api/v1/auth/register",
+                                 data=json.dumps(dict(username="firt last",
+                                                      password="testpass")),
+                                 content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("spaces", response_msg["Message"])
+
+    def test_username_has_enouh_characters(self):
+        """Tests error raised when username has less then 3 characters."""
+        response = self.app.post("/api/v1/auth/register",
+                                 data=json.dumps(dict(username="am",
+                                                      password="testpass")),
+                                 content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("characters", response_msg["Message"])
+
     def test_missing_password(self):
         """Tests error raised when password is missing."""
         response = self.app.post("/api/v1/auth/register",
@@ -49,7 +68,7 @@ class UserAuthClass(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("required", response_msg["Message"])
 
-    def test_wrong_username_format(self):
+    def test_username_isstring(self):
         """Tests error raised when wrong username format is provided."""
         response = self.app.post("/api/v1/auth/register",
                                  data=json.dumps(dict(username=1234,
@@ -123,11 +142,6 @@ class UserAuthClass(TestSetUp):
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Already", response_msg["Message"])
-
-    # At this stage previous test data needs to be cleared
-    def tearDown(self):
-        """ clear data after every test"""
-        user_object.users.clear()
 
     def test_reset_password(self):
         """Register a user"""
