@@ -13,11 +13,10 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from src.models import User, Business, Review
 from src.utils import validate_user
-from src import db
 
 auth = Blueprint('user', __name__)
 biz = Blueprint('business', __name__)
-
+tokens = {}
 
 def token_required(f):
     """All endoints that need log in will be wrapped by this decorator"""
@@ -33,8 +32,8 @@ def token_required(f):
 
         try:
             data = jwt.decode(token, os.getenv('SECRET_KEY'))
-            if data['username'] in user_object.u_token:
-                current_user = user_object.users[data['username']]
+            if data['public_id'] in tokens:
+                current_user = User.query.filter_by(public_id=data['public_id']).first()
             else:
                 return jsonify({"Message": "Token expired:Login again"}), 401
         except BaseException:
@@ -61,8 +60,10 @@ def create_user():
 
 
 @auth.route('/users', methods=['GET'])
-# @token_required
-def get_all_users():
+@token_required
+def get_all_users(current_user):
+    if not current_user.admin:
+        return jsonify({'Message' : "Cannot perform that action"}), 401
     users = User.query.all()
     output = []
     for user in users:
@@ -77,7 +78,8 @@ def get_all_users():
 
 
 @auth.route('/users/<id>', methods=['GET'])
-def get_user(id):
+@token_required
+def get_user(current_user, id):
     user = User.query.filter_by(id=id).first()
     if not user:
         return jsonify({'Message' : 'User not found'})
@@ -90,7 +92,10 @@ def get_user(id):
     return jsonify({'user': user_data}), 200
 
 @auth.route('/users/<id>', methods=['PUT'])
-def promote_user(id):
+@token_required
+def promote_user(current_user, id):
+    if not current_user.admin:
+        return jsonify({'Message' : "Cannot perform that action"}), 401
     user = User.query.filter_by(id=id).first()
     if not user:
         return jsonify({'Message' : 'User not found'})
@@ -99,7 +104,10 @@ def promote_user(id):
     return jsonify({'Message': 'User is now an admin'}), 200
 
 @auth.route('/users/<id>', methods=['DELETE'])
-def remove_user(id):
+@token_required
+def remove_user(current_user, id):
+    if not current_user.admin:
+        return jsonify({'Message' : "Cannot perform that action"}), 401
     user = User.query.filter_by(id=id).first()
     if not user:
         return jsonify({'Message' : 'User not found'})
@@ -110,24 +118,21 @@ def remove_user(id):
 def login():
     """Log in and generate token"""
     auth = request.get_json()
-
     if not auth or not auth['username'] or not auth['password']:
         return jsonify({"Message": "login required!"}), 401
-
-    if auth['username'] not in user_object.users.keys():
+    user = User.query.filter_by(username=auth['username']).first()  
+    if not user:
         return jsonify({"Message": "Username not found!"}), 401
-
-    user = user_object.users[auth['username']]
-    if check_password_hash(user['password'], auth['password']):
+    if check_password_hash(user.password, auth['password']):
         session['loggedin'] = True
         session['username'] = auth['username']
-        token = jwt.encode({'username': user['username'],
+        token = jwt.encode({'public_id': user.public_id,
                             'exp': datetime.datetime.utcnow() +
-                            datetime.timedelta(minutes=20)},
+                            datetime.timedelta(minutes=30)},
                            os.getenv('SECRET_KEY'))
-        user_object.u_token[user['username']] = token
+        tokens[user.public_id] = token
+        # user_object.u_token[user['username']] = token
         return jsonify({"token": token.decode('UTF-8')}), 200
-
     return jsonify({"Message": "login invalid!"}), 401
 
 
