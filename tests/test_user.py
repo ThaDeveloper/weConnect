@@ -176,6 +176,21 @@ class UserAuthClass(TestSetUp):
                                 headers={"x-access-token": self.token})
         self.assertEqual(response.status_code, 200)
 
+    def test_get_user_404(self):
+        """Test error raised when accessing nonexisting user"""
+        response = self.app.get('/api/v1/auth/users/10',
+                                content_type="application/json")
+        self.assertEqual(response.status_code, 404)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("not found", response_msg["Message"])
+    
+    def test_promote_user(self):
+        """Test error raised when accessing nonexisting user"""
+        response = self.app.put('/api/v1/auth/users/1',
+                                content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        response_msg = json.loads(response.data.decode("UTF-8"))
+        self.assertIn("admin", response_msg["Message"])
 
 if __name__ == '__main__':
     unittest.main()
