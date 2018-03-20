@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # from src.models import User, Business, Review
-from src import views
+from src import views, auth
 
-app.register_blueprint(views.auth, url_prefix='/api/v1/auth')
+app.register_blueprint(auth.auth, url_prefix='/api/v1/auth')
 app.register_blueprint(views.biz, url_prefix='/api/v1')
