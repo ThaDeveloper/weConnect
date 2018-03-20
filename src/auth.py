@@ -16,6 +16,7 @@ from src.utils import validate_user
 auth = Blueprint('user', __name__)
 tokens = {}
 
+
 def token_required(f):
     """All endoints that need log in will be wrapped by this decorator"""
     @wraps(f)
@@ -31,7 +32,8 @@ def token_required(f):
         try:
             data = jwt.decode(token, os.getenv('SECRET'))
             if data['public_id'] in tokens:
-                current_user = User.query.filter_by(public_id=data['public_id']).first()
+                current_user = User.query.filter_by(
+                    public_id=data['public_id']).first()
             else:
                 return jsonify({"Message": "Token expired:Login again"}), 401
         except BaseException:
@@ -61,7 +63,7 @@ def create_user():
 @token_required
 def get_all_users(current_user):
     if not current_user.admin:
-        return jsonify({'Message' : "Cannot perform that action"}), 401
+        return jsonify({'Message': "Cannot perform that action"}), 401
     users = User.query.all()
     output = []
     for user in users:
@@ -70,7 +72,7 @@ def get_all_users(current_user):
         user_data['public_id'] = user.public_id
         user_data['username'] = user.username
         user_data['password'] = user.password
-        user_data['admin']  = user.admin
+        user_data['admin'] = user.admin
         output.append(user_data)
     return jsonify({"users": output}), 200
 
@@ -80,37 +82,40 @@ def get_all_users(current_user):
 def get_user(current_user, id):
     user = User.query.filter_by(id=id).first()
     if not user:
-        return jsonify({'Message' : 'User not found'})
+        return jsonify({'Message': 'User not found'}), 404
     user_data = {}
     user_data['id'] = user.id
     user_data['public_id'] = user.public_id
     user_data['username'] = user.username
     user_data['password'] = user.password
-    user_data['admin']  = user.admin
+    user_data['admin'] = user.admin
     return jsonify({'user': user_data}), 200
+
 
 @auth.route('/users/<id>', methods=['PUT'])
 @token_required
 def promote_user(current_user, id):
     if not current_user.admin:
-        return jsonify({'Message' : "Cannot perform that action"}), 401
+        return jsonify({'Message': "Cannot perform that action"}), 401
     user = User.query.filter_by(id=id).first()
     if not user:
-        return jsonify({'Message' : 'User not found'})
+        return jsonify({'Message': 'User not found'})
     user.admin = True
     user.add()
     return jsonify({'Message': 'User is now an admin'}), 200
+
 
 @auth.route('/users/<id>', methods=['DELETE'])
 @token_required
 def remove_user(current_user, id):
     if not current_user.admin:
-        return jsonify({'Message' : "Cannot perform that action"}), 401
+        return jsonify({'Message': "Cannot perform that action"}), 401
     user = User.query.filter_by(id=id).first()
     if not user:
-        return jsonify({'Message' : 'User not found'})
+        return jsonify({'Message': 'User not found'})
     user.delete()
     return jsonify({'Message': 'User deleted successfully'}), 200
+
 
 @auth.route('/login', methods=['POST'])
 def login():
@@ -118,7 +123,7 @@ def login():
     auth = request.get_json()
     if not auth or not auth['username'] or not auth['password']:
         return jsonify({"Message": "login required!"}), 401
-    user = User.query.filter_by(username=auth['username']).first()  
+    user = User.query.filter_by(username=auth['username']).first()
     if not user:
         return jsonify({"Message": "Username not found!"}), 401
     if check_password_hash(user.password, auth['password']):
@@ -155,4 +160,4 @@ def reset_password(current_user):
     user = User.query.filter_by(username=data['username']).first()
     user.password = password_hash
     user.add()
-    return jsonify({"Message": "password updated"}), 202
+    return jsonify({"Message": "Password updated"}), 202

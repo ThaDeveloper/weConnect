@@ -10,7 +10,7 @@ currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from src.models import Business, Review
+from src.models import Business, Review, ValidationError
 from src.utils import validate_user
 from src.auth import token_required
 
@@ -22,25 +22,57 @@ biz = Blueprint('business', __name__)
 def create_business(current_user):
     """Logged in users to create business"""
     data = request.get_json()
-    if not data or not data['name']:
-        return jsonify({"Message": "Name is required!"}), 400
+    try:
+        # validates user key/value inputs using a try-catch block
+        business = Business()
+        sanitized = business.import_data(data)
+        if sanitized == "Invalid":
+            return jsonify({"Message": "A business must have a name"}), 400
+    except ValidationError as e:
+        return jsonify({"Message": str(e)}), 400
 
-    if data['name'] in business_object.businesses:
-        return jsonify({"Message": "Name already exists!"}), 400
-    user_id = current_user['username']
-    business_object.register_business(data['name'],
-                                      data['description'], data['location'],
-                                      data['category'], user_id)
-    return jsonify({"Message": "Business registered successfully"}), 201
+    duplicate = Business.query.filter_by(name=data['name']).first()
+    if not duplicate:
+        business.user_id = current_user.id
+        business.add()
+        return jsonify({"Message": "Business registered successfully"}), 201
+    return jsonify({"Message": "Business already exist"}), 400
 
 
-@biz.route('/businesses/<int:business_id>', methods=['GET'])
-def get_one_business(business_id):
+@biz.route('/businesses/<int:id>', methods=['GET'])
+def get_one_business(id):
     """Return a single business"""
-    response = business_object.find_business_by_id(business_id)
-    if response:
-        return jsonify({"Business Profile": response}), 200
-    return jsonify({"Message": "Business not found"}), 404
+    business = Business.query.filter_by(id=id).first()
+    if not business:
+        return jsonify({'Message': 'Business not found'}), 404
+    biz_data = {}
+    biz_data['id'] = business.id
+    biz_data['name'] = business.name
+    biz_data['description'] = business.description
+    biz_data['location'] = business.location
+    biz_data['category'] = business.category
+    biz_data['user_id'] = business.user_id
+    biz_data['created_at'] = business.created_at
+    biz_data['updated_at'] = business.updated_at
+    return jsonify({"business": biz_data}), 200
+
+
+@biz.route('/businesses', methods=['GET'])
+def get_all_businesses():
+    businesses = Business.query.all()
+    output = []
+    for business in businesses:
+        biz_data = {}
+        biz_data['id'] = business.id
+        biz_data['name'] = business.name
+        biz_data['description'] = business.description
+        biz_data['location'] = business.location
+        biz_data['category'] = business.category
+        biz_data['user_id'] = business.user_id
+        biz_data['created_at'] = business.created_at
+        biz_data['updated_at'] = business.updated_at
+        output.append(biz_data)
+    return jsonify({"businesses": output}), 200
 
 
 @biz.route('/businesses/<int:business_id>', methods=['PUT'])
@@ -67,11 +99,6 @@ def get_update_business(current_user, business_id):
                         "Unauthorized:You can only update your own" +
                         "business!!"}), 401
     return jsonify({'Message': 'Business not found'}), 404
-
-
-@biz.route('/businesses', methods=['GET'])
-def get_all_businesses():
-    return jsonify({"businesses": business_object.businesses}), 200
 
 
 @biz.route('/businesses/<int:business_id>', methods=['DELETE'])

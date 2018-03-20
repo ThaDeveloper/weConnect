@@ -95,10 +95,14 @@ class Business(db.Model):
     def import_data(self, data):
         """Validates request data from user"""
         try:
-            if len(data["name"].strip()) == 0:
+            if len(data['name'].strip()) == 0:
                 return "Invalid"
             else:
-                self.name = data["name"]
+                self.name = data['name']
+                self.description = data['description']
+                self.location = data['location']
+                self.category = data['category']
+                # self.user_id = current_user
         except KeyError as e:
             raise ValidationError("Invalid: Field required: " + e.args[0])
         return self
