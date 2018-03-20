@@ -32,7 +32,7 @@ def token_required(f):
             return jsonify({'Message': 'You need to log in'}), 401
 
         try:
-            data = jwt.decode(token, os.getenv('SECRET_KEY'))
+            data = jwt.decode(token, os.getenv('SECRET'))
             if data['username'] in user_object.u_token:
                 current_user = user_object.users[data['username']]
             else:
@@ -80,7 +80,7 @@ def login():
         token = jwt.encode({'username': user['username'],
                             'exp': datetime.datetime.utcnow() +
                             datetime.timedelta(minutes=20)},
-                           os.getenv('SECRET_KEY'))
+                           os.getenv('SECRET'))
         user_object.u_token[user['username']] = token
         return jsonify({"token": token.decode('UTF-8')}), 200
 
