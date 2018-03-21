@@ -146,7 +146,8 @@ class Review(db.Model):
             if len(data["title"].strip()) == 0:
                 return "Invalid"
             else:
-                self.name = data["title"]
+                self.title = data["title"]
+                self.message = data["message"]
         except KeyError as e:
             raise ValidationError("Invalid: Field required: " + e.args[0])
         return self

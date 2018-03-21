@@ -118,32 +118,44 @@ def remove_business(current_user, id):
                     "your own business!!"}), 401
 
 
-@biz.route('/businesses/<int:business_id>/reviews', methods=['POST'])
+@biz.route('/businesses/<int:id>/reviews', methods=['POST'])
 @token_required
-def create_review(current_user, business_id):
+def create_review(current_user, id):
     """ User can only review a business if logged in"""
-    data = request.get_json()
-    if not data or not data['title']:
-        return jsonify({"Message": "Review title is required"}), 400
+    business = Business.query.filter_by(id=id).first()
+    if not business:
+        return jsonify({'Message': 'Business not found'}), 404
+    else:
+        try:
+            review = Review()
+            sanitized = review.import_data(request.json)
+            if sanitized == "Invalid":
+                return jsonify(
+                    {"Message": "The review must have a title"}), 400
+        except ValidationError as e:
+            return jsonify({"Message": str(e)}), 400
 
-    business = business_object.find_business_by_id(business_id)
-    if business:
-        user_id = current_user['username']
-        review_object.add_review(data['title'],
-                                 data['message'],
-                                 user_id,
-                                 business_id)
+        review.user_id = current_user.id
+        review.business_id = business.id
+        review.add()
         return jsonify({"Message": "Your review has been recorded"}), 201
 
-    return jsonify({"Message": "Business not found"}), 401
 
-
-@biz.route('/businesses/<int:business_id>/reviews', methods=['GET'])
+@biz.route('/businesses/<int:id>/reviews', methods=['GET'])
 @token_required
-def get_business_reviews(current_user, business_id):
+def get_business_reviews(current_user, id):
     """List all business' reviews"""
-    business = business_object.find_business_by_id(business_id)
-    if business:
-        reviews = review_object.get_reviews(business_id)
-        return jsonify({"Reviews": reviews}), 200
-    return jsonify({"Message": "Business not found"}), 401
+    business = Business.query.filter_by(id=id).first()
+    if not business:
+        return jsonify({'Message': 'Business not found'}), 404
+    reviews = Review.query.filter_by(business_id=id)
+    output = []
+    for review in reviews:
+        review_data = {}
+        review_data['id'] = review.id
+        review_data['title'] = review.title
+        review_data['message'] = review.message
+        review_data['user_id'] = review.user_id
+        review_data['created_at'] = review.created_at
+        output.append(review_data)
+    return jsonify({"Reviews": output}), 200
