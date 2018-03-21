@@ -10,7 +10,7 @@ currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from src.models import User
+from src.v2.models import User
 from src.utils import validate_user
 
 auth = Blueprint('user', __name__)

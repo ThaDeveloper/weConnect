@@ -8,7 +8,7 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from src import app, db
-from src.models import User, Business, Review
+from src.v2.models import User, Business, Review
 from config import Testing
 
 
@@ -29,22 +29,22 @@ class TestSetUp(unittest.TestCase):
         self.new_business = {"name": "Apple",
                              "description": "", "location": "",
                              "category": ""}
-        self.register = self.app.post('/api/v1/auth/register',
+        self.register = self.app.post('/api/v2/auth/register',
                                       data=json.dumps(self.user),
                                       headers={"content-type":
                                                "application/json"})
-        self.login = self.app.post('/api/v1/auth/login',
+        self.login = self.app.post('/api/v2/auth/login',
                                    data=json.dumps(self.user),
                                    content_type='application/json')
 
         self.data = json.loads(self.login.get_data(as_text=True))
         self.token = self.data['token']
         self.app.post(
-            "/api/v1/auth/register",
+            "/api/v2/auth/register",
             data=json.dumps(
                 self.unknownuser),
             content_type="application/json")
-        self.unkownlogin = self.app.post("/api/v1/auth/login",
+        self.unkownlogin = self.app.post("/api/v2/auth/login",
                                          data=json.dumps(self.unknownuser),
                                          content_type="application/json")
         self.data = json.loads(self.unkownlogin.get_data(as_text=True))

@@ -1,0 +1,6 @@
+{
+  "tests/test_business.py": true,
+  "tests/test_reviews.py": true,
+  "tests/test_setup.py": true,
+  "tests/test_user.py": true
+}

@@ -10,9 +10,9 @@ currentdir = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from src.models import Business, Review, ValidationError
+from src.v2.models import Business, Review, ValidationError
 from src.utils import validate_user
-from src.auth import token_required
+from src.v2.auth import token_required
 
 biz = Blueprint('business', __name__)
 
