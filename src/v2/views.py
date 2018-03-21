@@ -75,45 +75,47 @@ def get_all_businesses():
     return jsonify({"businesses": output}), 200
 
 
-@biz.route('/businesses/<int:business_id>', methods=['PUT'])
+@biz.route('/businesses/<int:id>', methods=['PUT'])
 @token_required
-def get_update_business(current_user, business_id):
+def get_update_business(current_user, id):
     """
     User must be logged in to update business
     """
     data = request.get_json()
-    new_name = data['name']
-    new_description = data['description']
-    business = business_object.find_business_by_id(business_id)
+    business = Business.query.filter_by(id=id).first()
     if business:
-        if current_user['username'] == business['user_id']:
-            response = business_object.update_business(business_id,
-                                                       new_name,
-                                                       new_description)
-            if response:
-                if new_name not in business_object.businesses:
-                    return jsonify({'Message': 'Business updated'}), 200
-                return jsonify({'Message':
-                                'Business name already exists'}), 400
+        if current_user.id == business.user_id:
+            # to get specific messages we only filter by name not name and
+            # owner
+            duplicate = Business.query.filter_by(name=data['name']).first()
+            if not duplicate or business.name == data['name']:
+                business.name = data['name']
+                business.description = data['description']
+                business.location = data['location']
+                business.category = data['category']
+                business.add()
+                return jsonify({'Message': 'Business updated'}), 200
+            return jsonify({'Message':
+                            'Business name already exists'}), 400
         return jsonify({"Message":
                         "Unauthorized:You can only update your own" +
-                        "business!!"}), 401
+                        " business!!"}), 401
     return jsonify({'Message': 'Business not found'}), 404
 
 
-@biz.route('/businesses/<int:business_id>', methods=['DELETE'])
+@biz.route('/businesses/<int:id>', methods=['DELETE'])
 @token_required
-def remove_business(current_user, business_id):
+def remove_business(current_user, id):
     """Remove business by id"""
-    business = business_object.find_business_by_id(business_id)
-    if business:
-        if current_user['username'] == business['user_id']:
-            del business_object.businesses[business['name']]
-            return jsonify({"Message": "Business deleted successfully"}), 200
-        return jsonify({"Message":
-                        "Unauthorized:You can only delete" +
-                        "your own business!!"}), 401
-    return jsonify({"Message": "Business not found"}), 404
+    business = Business.query.filter_by(id=id).first()
+    if not business:
+        return jsonify({'Message': 'Business not found'}), 404
+    if current_user.id == business.user_id:
+        business.delete()
+        return jsonify({"Message": "Business deleted successfully"}), 200
+    return jsonify({"Message":
+                    "Unauthorized:You can only delete" +
+                    "your own business!!"}), 401
 
 
 @biz.route('/businesses/<int:business_id>/reviews', methods=['POST'])
