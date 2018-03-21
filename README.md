@@ -67,7 +67,16 @@ On the weConnect directory
 2. Install project dependencies
 `$ pip install -r requirements.txt`
 
-Finally run `$ flask run`
+3. Run migrations
+```
+$ python3 manage.py db init
+
+$ python3 manage.py db migrate
+
+$ python3 manage.py db upgrade
+```
+
+4. Finally run `$ flask run`
 
 ### Testing
 Run command 

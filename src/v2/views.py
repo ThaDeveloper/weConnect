@@ -57,22 +57,41 @@ def get_one_business(id):
     return jsonify({"business": biz_data}), 200
 
 
-@biz.route('/businesses', methods=['GET'])
+@biz.route('/businesses/', methods=['GET'])
 def get_all_businesses():
-    businesses = Business.query.all()
-    output = []
-    for business in businesses:
-        biz_data = {}
-        biz_data['id'] = business.id
-        biz_data['name'] = business.name
-        biz_data['description'] = business.description
-        biz_data['location'] = business.location
-        biz_data['category'] = business.category
-        biz_data['user_id'] = business.user_id
-        biz_data['created_at'] = business.created_at
-        biz_data['updated_at'] = business.updated_at
-        output.append(biz_data)
-    return jsonify({"businesses": output}), 200
+    page = request.args.get('page', default=1, type=int)
+    limit = request.args.get('limit', default=5, type=int)
+    query = request.args.get('q', default=None, type=str)
+    if query:
+        businesses = Business.query.filter(
+            Business.name.ilike(
+                '%' +
+                query +
+                '%')).paginate(
+            page,
+            limit,
+            error_out=False).items
+    else:
+        businesses = Business.query.order_by(
+            Business.created_at.desc()).paginate(
+            page, limit, error_out=False).items
+    # businesses = Business.query.all()
+    if businesses:
+        return jsonify({
+            'businesses': [
+                {
+                    'id': business.id,
+                    'name': business.name,
+                    'description': business.description,
+                    'location': business.location,
+                    'category': business.category,
+                    'owner': business.owner.username,
+                    'created_at': business.created_at,
+                    'updated_at': business.updated_at
+                } for business in businesses
+            ]
+        }), 200
+    return jsonify({"Message": "No available business"}), 400
 
 
 @biz.route('/businesses/<int:id>', methods=['PUT'])
@@ -149,13 +168,16 @@ def get_business_reviews(current_user, id):
     if not business:
         return jsonify({'Message': 'Business not found'}), 404
     reviews = Review.query.filter_by(business_id=id)
-    output = []
-    for review in reviews:
-        review_data = {}
-        review_data['id'] = review.id
-        review_data['title'] = review.title
-        review_data['message'] = review.message
-        review_data['user_id'] = review.user_id
-        review_data['created_at'] = review.created_at
-        output.append(review_data)
-    return jsonify({"Reviews": output}), 200
+    if reviews:
+        return jsonify({
+            'Reviews': [
+                {
+                    'id': review.id,
+                    'title': review.title,
+                    'message': review.message,
+                    'reviewer': review.reviewer.username,
+                    'create_at': review.created_at
+                } for review in reviews
+            ]
+        }), 200
+    return jsonify({"Message": "No reviews for this business"})
