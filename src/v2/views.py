@@ -62,6 +62,8 @@ def get_all_businesses():
     page = request.args.get('page', default=1, type=int)
     limit = request.args.get('limit', default=5, type=int)
     query = request.args.get('q', default=None, type=str)
+    category = request.args.get('category', default=None, type=str)
+    location = request.args.get('location', default=None, type=str)
     if query:
         businesses = Business.query.filter(
             Business.name.ilike(
@@ -71,6 +73,18 @@ def get_all_businesses():
             page,
             limit,
             error_out=False).items
+    if category:
+        businesses = Business.query.filter(
+                    Business.category == category
+                ).paginate(page, limit, error_out=False).items
+    if location:
+        businesses = Business.query.filter(
+                    Business.location == location
+                ).paginate(page, limit, error_out=False).items
+    if category and location:
+        businesses = Business.query.filter(
+                    Business.category == category, Business.location == location
+                ).paginate(page, limit, error_out=False).items
     else:
         businesses = Business.query.order_by(
             Business.created_at.desc()).paginate(
