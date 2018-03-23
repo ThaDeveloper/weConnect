@@ -34,7 +34,7 @@ class User(db.Model):
         cascade='all, delete-orphan'
     )
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, admin=False):
         """Initialize a user instance
         usernames are stripped off any spaces and case set to lower
         Passwords are encrypted before saving to db
@@ -43,7 +43,7 @@ class User(db.Model):
         self.username = username.strip()
         self.password = generate_password_hash(password, method='sha256')
         self.public_id = str(uuid.uuid4())
-        self.admin = False
+        self.admin = admin
 
     def add(self):
         """Add user to the database"""

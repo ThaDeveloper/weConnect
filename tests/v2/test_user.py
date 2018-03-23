@@ -8,6 +8,7 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from tests.v2.test_setup import TestSetUp
+from src.v2.models import User
 
 
 class UserAuthClass(TestSetUp):
@@ -145,14 +146,20 @@ class UserAuthClass(TestSetUp):
 
     def test_reset_password(self):
         """Register a user"""
-        self.app.post('/api/v2/auth/register', data=json.dumps(self.user),
-                      headers={"content-type": "application/json"})
+        self.app.post(
+            '/api/v2/auth/register',
+            data=json.dumps(
+                dict(
+                    username="testreset",
+                    password="pass")),
+            headers={
+                "content-type": "application/json"})
 
         # login the just registered user and get a token
         self.login = self.app.post(
             '/api/v2/auth/login',
-            data=json.dumps(
-                self.user),
+            data=json.dumps(dict(username="testreset",
+                                 password="pass")),
             content_type='application/json')
         self.data = json.loads(self.login.get_data(as_text=True))
         self.token = self.data['token']
@@ -160,8 +167,8 @@ class UserAuthClass(TestSetUp):
         response = self.app.put(
             '/api/v2/auth/reset-password',
             data=json.dumps(
-                dict(
-                    password="new_pass")),
+                dict(username="testreset",
+                     password="new_pass")),
             content_type="application/json",
             headers={
                 "x-access-token": self.token})
@@ -173,32 +180,44 @@ class UserAuthClass(TestSetUp):
         """Test if get method gets all registered users"""
         response = self.app.get('/api/v2/auth/users',
                                 content_type="application/json",
-                                headers={"x-access-token": self.token})
+                                headers={"x-access-token": self.admintoken})
         self.assertEqual(response.status_code, 200)
 
     def test_get_user_404(self):
         """Test error raised when accessing nonexisting user"""
-        response = self.app.get('/api/v2/auth/users/10',
-                                content_type="application/json")
+        response = self.app.get('/api/v2/auth/users/3000',
+                                content_type="application/json",
+                                headers={"x-access-token": self.admintoken})
         self.assertEqual(response.status_code, 404)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("not found", response_msg["Message"])
-    
+
     def test_promote_user(self):
         """Test error raised when accessing nonexisting user"""
-        response = self.app.put('/api/v2/auth/users/1',
-                                content_type="application/json")
+        response = self.app.put(
+            '/api/v2/auth/users/{}'.format(
+                User.query.order_by(
+                    User.created_at).first().id),
+            content_type="application/json",
+            headers={
+                "x-access-token": self.admintoken})
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("admin", response_msg["Message"])
 
     def test_delete_user(self):
         """Tests deleting user from db"""
-        response = self.app.delete('/api/v2/auth/users/1',
-                                content_type="application/json")
+        response = self.app.delete(
+            '/api/v2/auth/users/{}'.format(
+                User.query.order_by(
+                    User.created_at).first().id),
+            content_type="application/json",
+            headers={
+                "x-access-token": self.admintoken})
         self.assertEqual(response.status_code, 200)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("deleted", response_msg["Message"])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -50,13 +50,19 @@ def create_user():
     data = request.get_json()
     if validate_user(data):
         return validate_user(data)
-    new_user = User(username=data['username'], password=data['password'])
+    if 'admin' not in data:
+        new_user = User(username=data['username'], password=data['password'])
+    else:
+        new_user = User(
+            username=data['username'],
+            password=data['password'],
+            admin=data['admin'])
     # check for duplicates before creating the new user
     duplicate = User.query.filter_by(username=new_user.username).first()
     if not duplicate:
         new_user.add()
         return jsonify({"Message": "User registered successfully"}), 201
-    return jsonify({"Message": "User already exist"}), 400
+    return jsonify({"Message": "User already exists"}), 400
 
 
 @auth.route('/users', methods=['GET'])
@@ -123,7 +129,7 @@ def remove_user(current_user, id):
         return jsonify({'Message': "Cannot perform that action"}), 401
     user = User.query.filter_by(id=id).first()
     if not user:
-        return jsonify({'Message': 'User not found'})
+        return jsonify({'Message': 'User not found'}), 400
     user.delete()
     return jsonify({'Message': 'User deleted successfully'}), 200
 
