@@ -63,8 +63,8 @@ Ensure you have bootstrap 3.3.7 or later.( Can download or use available CDNs.Re
 1. Create a [virtual environment](http://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv)
 `$ virtualenv envname` and then `$ source envname/bin/activate`
 
-On the weConnect directory
-2. Install project dependencies
+2. On the weConnect directory install project dependencies
+
 `$ pip install -r requirements.txt`
 
 3. Run migrations

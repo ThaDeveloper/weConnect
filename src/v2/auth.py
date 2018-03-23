@@ -80,6 +80,7 @@ def get_all_users(current_user):
         }), 200
     return jsonify({"Message": "No available users"}), 400
 
+
 @auth.route('/users/<id>', methods=['GET'])
 @token_required
 def get_user(current_user, id):

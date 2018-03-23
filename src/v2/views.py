@@ -45,16 +45,20 @@ def get_one_business(id):
     business = Business.query.filter_by(id=id).first()
     if not business:
         return jsonify({'Message': 'Business not found'}), 404
-    biz_data = {}
-    biz_data['id'] = business.id
-    biz_data['name'] = business.name
-    biz_data['description'] = business.description
-    biz_data['location'] = business.location
-    biz_data['category'] = business.category
-    biz_data['user_id'] = business.user_id
-    biz_data['created_at'] = business.created_at
-    biz_data['updated_at'] = business.updated_at
-    return jsonify({"business": biz_data}), 200
+    return jsonify({
+        'businesses': [
+            {
+                'id': business.id,
+                'name': business.name,
+                'description': business.description,
+                'location': business.location,
+                'category': business.category,
+                'owner': business.owner.username,
+                'created_at': business.created_at,
+                'updated_at': business.updated_at
+            }
+        ]
+    }), 200
 
 
 @biz.route('/businesses/', methods=['GET'])
@@ -75,16 +79,16 @@ def get_all_businesses():
             error_out=False).items
     if category:
         businesses = Business.query.filter(
-                    Business.category == category
-                ).paginate(page, limit, error_out=False).items
+            Business.category == category
+        ).paginate(page, limit, error_out=False).items
     if location:
         businesses = Business.query.filter(
-                    Business.location == location
-                ).paginate(page, limit, error_out=False).items
+            Business.location == location
+        ).paginate(page, limit, error_out=False).items
     if category and location:
         businesses = Business.query.filter(
-                    Business.category == category, Business.location == location
-                ).paginate(page, limit, error_out=False).items
+            Business.category == category, Business.location == location
+        ).paginate(page, limit, error_out=False).items
     else:
         businesses = Business.query.order_by(
             Business.created_at.desc()).paginate(
