@@ -27,7 +27,7 @@ def create_business(current_user):
         business = Business()
         sanitized = business.import_data(data)
         if sanitized == "Invalid":
-            return jsonify({"Message": "A business must have a name"}), 400
+            return jsonify({"Message": "A business name is required"}), 400
     except ValidationError as e:
         return jsonify({"Message": str(e)}), 400
 
@@ -36,7 +36,7 @@ def create_business(current_user):
         business.user_id = current_user.id
         business.add()
         return jsonify({"Message": "Business registered successfully"}), 201
-    return jsonify({"Message": "Business already exist"}), 400
+    return jsonify({"Message": "Business already exists"}), 400
 
 
 @biz.route('/businesses/<int:id>', methods=['GET'])
@@ -44,7 +44,7 @@ def get_one_business(id):
     """Return a single business"""
     business = Business.query.filter_by(id=id).first()
     if not business:
-        return jsonify({'Message': 'Business not found'}), 404
+        return jsonify({'Message': 'Business not found'}), 400
     return jsonify({
         'businesses': [
             {
@@ -161,7 +161,7 @@ def create_review(current_user, id):
     """ User can only review a business if logged in"""
     business = Business.query.filter_by(id=id).first()
     if not business:
-        return jsonify({'Message': 'Business not found'}), 404
+        return jsonify({'Message': 'Business not found'}), 400
     else:
         try:
             review = Review()
@@ -184,7 +184,7 @@ def get_business_reviews(current_user, id):
     """List all business' reviews"""
     business = Business.query.filter_by(id=id).first()
     if not business:
-        return jsonify({'Message': 'Business not found'}), 404
+        return jsonify({'Message': 'Business not found'}), 400
     reviews = Review.query.filter_by(business_id=id)
     if reviews:
         return jsonify({
