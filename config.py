@@ -19,7 +19,7 @@ class Testing(BaseConfig):
     """docstring for Testing"""
     DEBUG = True
     TESTING = True
-    # SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = os.environ['TESTING_DATABASE_URL']
 
 
 class Production(BaseConfig):

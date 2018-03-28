@@ -16,7 +16,7 @@ class TestSetUp(unittest.TestCase):
     """Initialize the app with test data"""
 
     def setUp(self):
-        # app.config.from_object('config.Testing')
+        app.config.from_object('config.Testing')
         self.app = app.test_client()
         db.create_all()
         self.user = {"username": "testuser", "password": "testpass"}
