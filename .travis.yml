@@ -1,14 +1,22 @@
 language: python
 python:
-  - "3.5.2"
+  - "3.5"
+services:
+  - postgresql
 install:
   - pip install -r requirements.txt
   - pip install coveralls
 env:
-  - DB=postgresql
+  - DB=postgres
+  before_script:
+  - psql -c 'create database weconnect_testing;' -U postgres
+  - flask db upgrade
 script: 
   - nosetests --with-coverage --cover-package=src
   - coveralls
+branches:
+  only:
+  - challenge3
 after_success:
  - coveralls
 notifications:
