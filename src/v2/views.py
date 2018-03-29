@@ -63,37 +63,15 @@ def get_one_business(id):
 
 @biz.route('/businesses/', methods=['GET'])
 def get_all_businesses():
-    page = request.args.get('page', default=1, type=int)
-    limit = request.args.get('limit', default=5, type=int)
-    query = request.args.get('q', default=None, type=str)
-    category = request.args.get('category', default=None, type=str)
-    location = request.args.get('location', default=None, type=str)
-    if query:
-        businesses = Business.query.filter(
-            Business.name.ilike(
-                '%' +
-                query +
-                '%')).paginate(
-            page,
-            limit,
-            error_out=False).items
-    if category:
-        businesses = Business.query.filter(
-            Business.category == category
-        ).paginate(page, limit, error_out=False).items
-    if location:
-        businesses = Business.query.filter(
-            Business.location == location
-        ).paginate(page, limit, error_out=False).items
-    if category and location:
-        businesses = Business.query.filter(
-            Business.category == category, Business.location == location
-        ).paginate(page, limit, error_out=False).items
-    else:
-        businesses = Business.query.order_by(
-            Business.created_at.desc()).paginate(
-            page, limit, error_out=False).items
-    # businesses = Business.query.all()
+     
+    params = {
+        'page': request.args.get('page', default=1, type=int),
+        'limit': request.args.get('limit', default=5, type=int),
+        'location': request.args.get('location', default=None, type=str),
+        'category': request.args.get('category', default=None, type=str),
+        'query': request.args.get('q', default=None, type=str)
+    }
+    businesses = Business().search(params)
     if businesses:
         return jsonify({
             'businesses': [
