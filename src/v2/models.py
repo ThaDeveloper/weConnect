@@ -2,7 +2,7 @@ from src import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 from src.utils import ValidationError
-
+from flask import request
 
 class User(db.Model):
     """Create users table
@@ -34,7 +34,7 @@ class User(db.Model):
         cascade='all, delete-orphan'
     )
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, admin=False):
         """Initialize a user instance
         usernames are stripped off any spaces and case set to lower
         Passwords are encrypted before saving to db
@@ -43,7 +43,7 @@ class User(db.Model):
         self.username = username.strip()
         self.password = generate_password_hash(password, method='sha256')
         self.public_id = str(uuid.uuid4())
-        self.admin = False
+        self.admin = admin
 
     def add(self):
         """Add user to the database"""
@@ -102,10 +102,60 @@ class Business(db.Model):
                 self.description = data['description']
                 self.location = data['location']
                 self.category = data['category']
-                # self.user_id = current_user
         except KeyError as e:
             raise ValidationError("Invalid: Field required: " + e.args[0])
         return self
+    
+    def search(self, params):
+        """Search by name and filter by category and location"""
+        page = params['page']
+        limit = params['limit']
+        location = params['location']
+        category = params['category']
+        query = params['query']
+
+        if query or location or category:
+            if query and not location and not category:
+                return self.query.filter(
+                    Business.name.ilike(
+                        '%' +
+                        query +
+                        '%')).paginate(
+                    page,
+                    limit,
+                    error_out=False).items
+            if category and not location:
+                return self.query.filter(
+                    Business.category == category
+                ).paginate(page, limit, error_out=False).items
+            if location and not category:
+                return self.query.filter(
+                    Business.location == location
+                ).paginate(page, limit, error_out=False).items
+            if category and location:
+                return self.query.filter(
+                    Business.category == category, Business.location == location
+                ).paginate(page, limit, error_out=False).items
+            if query and location and not category:
+                return self.query.filter(
+                    Business.location == location,
+                    Business.name.ilike('%' + query + '%')
+                ).paginate(page, limit, error_out=False).items
+            if query and category and not location:
+                return self.query.filter(
+                    Business.category == category,
+                    Business.name.ilike('%' + query + '%')
+                ).paginate(page, limit, error_out=False).items
+            if query and category and location:
+                return self.query.filter(
+                    Business.category == category,
+                    Business.location == location,
+                    Business.name.ilike('%' + query + '%')
+                ).paginate(page, limit, error_out=False).items
+        return self.query.order_by(
+                Business.created_at.desc()).paginate(
+                page, limit, error_out=False).items
+       
 
 
 class Review(db.Model):

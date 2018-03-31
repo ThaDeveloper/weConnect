@@ -8,6 +8,7 @@ currentdir = os.path.dirname(os.path.abspath(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from tests.v2.test_setup import TestSetUp
+from src.v2.models import Business
 
 
 class TestBusinessClassFunctionality(TestSetUp):
@@ -44,11 +45,18 @@ class TestBusinessClassFunctionality(TestSetUp):
         """
         Error raised for duplicate business names.
         """
+        self.app.post("/api/v2/businesses",
+                                 data=json.dumps(dict(name="Google",
+                         description="Its awesome",
+                         location="CA",
+                         category="Technology")),
+                                 content_type="application/json",
+                                 headers={"x-access-token": self.token})
         response = self.app.post("/api/v2/businesses",
                                  data=json.dumps(dict(name="Google",
-                                                      description="",
-                                                      location="",
-                                                      category="")),
+                                                      description="ddd",
+                                                      location="ddddd",
+                                                      category="dd")),
                                  content_type="application/json",
                                  headers={"x-access-token": self.token})
         self.assertEqual(response.status_code, 400)
@@ -56,17 +64,14 @@ class TestBusinessClassFunctionality(TestSetUp):
         self.assertIn("already exists", response_msg["Message"])
 
     def test_business_list(self):
-        resp = self.app.get('/api/v2/businesses')
+        resp = self.app.get('/api/v2/businesses/')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
 
     def test_business_detail_200(self):
         """Test if you can get a single business.
         Register a single business first"""
-        self.app.post('/api/v2/businesses', data=json.dumps(self.business),
-                      content_type="application/json",
-                      headers={"x-access-token": self.token})
-        resp = self.app.get('/api/v2/businesses/1')
+        resp = self.app.get('/api/v2/businesses/{}'.format(Business.query.order_by(Business.created_at).first().id))
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
 
@@ -74,14 +79,14 @@ class TestBusinessClassFunctionality(TestSetUp):
         """
         Error raised for invalid business request.
         """
-        resp = self.app.get("/api/v2/businesses/15")
-        self.assertEqual(resp.status_code, 404)
+        resp = self.app.get("/api/v2/businesses/1000")
+        self.assertEqual(resp.status_code, 400)
         response_msg = json.loads(resp.data.decode("UTF-8"))
         self.assertIn("not found", response_msg["Message"])
 
     def test_update_business(self):
         """Tests a business can be updated."""
-        response = self.app.put("/api/v2/businesses/1",
+        response = self.app.put("/api/v2/businesses/{}".format(Business.query.order_by(Business.created_at).first().id),
                                 data=json.dumps(self.new_business),
                                 content_type="application/json",
                                 headers={"x-access-token": self.token})
@@ -91,7 +96,7 @@ class TestBusinessClassFunctionality(TestSetUp):
 
     def test_invalid_update(self):
         """Error raised for invalid update request."""
-        response = self.app.put("/api/v2/businesses/3",
+        response = self.app.put("/api/v2/businesses/1000",
                                 data=json.dumps(self.new_business),
                                 content_type="application/json",
                                 headers={"x-access-token": self.token})
@@ -102,7 +107,7 @@ class TestBusinessClassFunctionality(TestSetUp):
 
     def test_updating_unauthorized_business(self):
         """Tests error raised when updating someone else's business."""
-        response = self.app.put("/api/v2/businesses/1",
+        response = self.app.put("/api/v2/businesses/{}".format(Business.query.order_by(Business.created_at).first().id),
                                 data=json.dumps(self.new_business),
                                 content_type="application/json",
                                 headers={"x-access-token": self.unkowntoken})
@@ -115,7 +120,14 @@ class TestBusinessClassFunctionality(TestSetUp):
         """
         Tests for updating business to a name that already exists.
          """
-        response = self.app.put("/api/v2/businesses/1",
+        self.app.post("/api/v2/businesses",
+                                 data=json.dumps(dict(name="Google",
+                         description="Its awesome",
+                         location="CA",
+                         category="Technology")),
+                                 content_type="application/json",
+                                 headers={"x-access-token": self.token})
+        response = self.app.put("/api/v2/businesses/{}".format(Business.query.order_by(Business.created_at).first().id),
                                 data=json.dumps(self.business),
                                 content_type="application/json",
                                 headers={"x-access-token": self.token})
@@ -125,18 +137,7 @@ class TestBusinessClassFunctionality(TestSetUp):
 
     def test_delete_business(self):
         """Tests business deletion."""
-        self.app.post(
-            '/api/v2/businesses',
-            data=json.dumps(
-                dict(
-                    name="Andela",
-                    description="",
-                    location="",
-                    category="")),
-            content_type="application/json",
-            headers={
-                "x-access-token": self.token})
-        response = self.app.delete("/api/v2/businesses/2",
+        response = self.app.delete("/api/v2/businesses/{}".format(Business.query.order_by(Business.created_at).first().id),
                                    content_type="application/json",
                                    headers={"x-access-token": self.token})
         self.assertEqual(response.status_code, 200)
@@ -146,7 +147,7 @@ class TestBusinessClassFunctionality(TestSetUp):
     def test_deleting_unauthorized_business(self):
         """Tests error raised when deleting someone else's business."""
         response = self.app.delete(
-            "/api/v2/businesses/1",
+            "/api/v2/businesses/{}".format(Business.query.order_by(Business.created_at).first().id),
             data=json.dumps(
                 self.new_business),
             content_type="application/json",
@@ -159,7 +160,7 @@ class TestBusinessClassFunctionality(TestSetUp):
 
     def test_invalid_delete(self):
         """Error raised for invalid delete request."""
-        response = self.app.delete("/api/v2/businesses/10",
+        response = self.app.delete("/api/v2/businesses/1000",
                                    content_type="application/json",
                                    headers={"x-access-token": self.token})
         self.assertEqual(response.status_code, 404)
@@ -167,13 +168,13 @@ class TestBusinessClassFunctionality(TestSetUp):
         self.assertIn("not found", response_msg["Message"])
 
     def test_unauthorized_delete(self):
-        response = self.app.delete("/api/v2/businesses/2",
+        response = self.app.delete("/api/v2/businesses/{}".format(Business.query.order_by(Business.created_at).first().id),
                                    content_type="application/json",
                                    headers={"x-access-token": "dd"})
         self.assertEqual(response.status_code, 401)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Invalid", response_msg["Message"])
-
+    
 
 if __name__ == "__main__":
     unittest.main()

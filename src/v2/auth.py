@@ -50,13 +50,19 @@ def create_user():
     data = request.get_json()
     if validate_user(data):
         return validate_user(data)
-    new_user = User(username=data['username'], password=data['password'])
+    if 'admin' not in data:
+        new_user = User(username=data['username'], password=data['password'])
+    else:
+        new_user = User(
+            username=data['username'],
+            password=data['password'],
+            admin=data['admin'])
     # check for duplicates before creating the new user
     duplicate = User.query.filter_by(username=new_user.username).first()
     if not duplicate:
         new_user.add()
         return jsonify({"Message": "User registered successfully"}), 201
-    return jsonify({"Message": "User already exist"}), 400
+    return jsonify({"Message": "User already exists"}), 400
 
 
 @auth.route('/users', methods=['GET'])
@@ -65,16 +71,20 @@ def get_all_users(current_user):
     if not current_user.admin:
         return jsonify({'Message': "Cannot perform that action"}), 401
     users = User.query.all()
-    output = []
-    for user in users:
-        user_data = {}
-        user_data['id'] = user.id
-        user_data['public_id'] = user.public_id
-        user_data['username'] = user.username
-        user_data['password'] = user.password
-        user_data['admin'] = user.admin
-        output.append(user_data)
-    return jsonify({"users": output}), 200
+    if users:
+        return jsonify({
+            'Users': [
+                {
+                    'id': user.id,
+                    'username': user.username,
+                    'password': user.password,
+                    'admin': user.admin,
+                    'created_at': user.created_at,
+                    'updated_at': user.updated_at
+                } for user in users
+            ]
+        }), 200
+    return jsonify({"Message": "No available users"}), 400
 
 
 @auth.route('/users/<id>', methods=['GET'])
@@ -83,13 +93,20 @@ def get_user(current_user, id):
     user = User.query.filter_by(id=id).first()
     if not user:
         return jsonify({'Message': 'User not found'}), 404
-    user_data = {}
-    user_data['id'] = user.id
-    user_data['public_id'] = user.public_id
-    user_data['username'] = user.username
-    user_data['password'] = user.password
-    user_data['admin'] = user.admin
-    return jsonify({'user': user_data}), 200
+    if not current_user.admin or not current_user.id == id:
+        return jsonify({'Message': "Cannot perform that action"}), 401
+    return jsonify({
+        'Users': [
+            {
+                'id': user.id,
+                'username': user.username,
+                'password': user.password,
+                'admin': user.admin,
+                'created_at': user.created_at,
+                'updated_at': user.updated_at
+            }
+        ]
+    }), 200
 
 
 @auth.route('/users/<id>', methods=['PUT'])
@@ -112,7 +129,7 @@ def remove_user(current_user, id):
         return jsonify({'Message': "Cannot perform that action"}), 401
     user = User.query.filter_by(id=id).first()
     if not user:
-        return jsonify({'Message': 'User not found'})
+        return jsonify({'Message': 'User not found'}), 400
     user.delete()
     return jsonify({'Message': 'User deleted successfully'}), 200
 
@@ -161,3 +178,26 @@ def reset_password(current_user):
     user.password = password_hash
     user.add()
     return jsonify({"Message": "Password updated"}), 202
+
+
+@auth.route('/users/<id>/businesses', methods=['GET'])
+def read_user_businesses(id):
+    """Get all businesses owned by a particular user"""
+    user = User.query.get(id)
+    if user:
+        return jsonify(
+            [
+                {
+                    'id': business.id,
+                    'name': business.name,
+                    'description': business.description,
+                    'location': business.location,
+                    'category': business.category,
+                    'owner': business.owner.username,
+                    'created_at': business.created_at,
+                    'updated_at': business.updated_at
+                } for business in user.businesses
+            ]
+        ), 200
+
+    return jsonify({'warning': 'User has zero businesses'}), 400
