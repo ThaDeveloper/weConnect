@@ -19,11 +19,13 @@ class TestSetUp(unittest.TestCase):
         app.config.from_object('config.Testing')
         self.app = app.test_client()
         db.create_all()
-        self.user = {"username": "testuser", "password": "testpass"}
-        self.unknownuser = {"username": "unkownuser", "password": "password"}
+        self.user = {"username": "testuser", "password": "testpass", "first_name": "Test", "last_name": "User"}
+        self.unknownuser = {"username": "unkownuser", "password": "password", "first_name":"Unkown", "last_name": "User"}
         self.admin = {
             "username": "testadmin",
             "password": "password",
+            "first_name": "Test",
+            "last_name": "admin",
             "admin": True}
         self.business = {"name": "Google",
                          "description": "Its awesome",
@@ -44,7 +46,6 @@ class TestSetUp(unittest.TestCase):
                                    content_type='application/json')
 
         self.data = json.loads(self.login.get_data(as_text=True))
-        print(self.data)
         self.token = self.data['token']
         # Register and login a testunkownuser
         self.app.post(
@@ -80,7 +81,6 @@ class TestSetUp(unittest.TestCase):
             "category": "Tech"}
         test_business = Business()
         test_business.import_data(business)
-        print (Business.query.order_by(Business.created_at).first().id)
         test_business.user_id = User.query.order_by(User.created_at).first().id
 
         business2 = {
@@ -107,7 +107,6 @@ class TestSetUp(unittest.TestCase):
                   "message": "Its a great place to grow"}
         test_review = Review()
         test_review.import_data(review)
-        print (test_review.title)
         test_review.business_id = Business.query.order_by(Business.created_at).first().id
         test_review.user_id = User.query.order_by(User.created_at).first().id
 

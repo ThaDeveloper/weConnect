@@ -23,7 +23,7 @@ class UserAuthClass(TestSetUp):
             data=json.dumps(
                 dict(
                     username="testusername",
-                    password="testpassword")),
+                    password="testpassword", first_name="test", last_name="username")),
             content_type="application/json")
         self.assertEqual(response.status_code, 201)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -33,7 +33,7 @@ class UserAuthClass(TestSetUp):
         """Tests error raised with username missing."""
         response = self.app.post("/api/v2/auth/register",
                                  data=json.dumps(dict(username="",
-                                                      password="testpass")),
+                                                      password="testpass", first_name="blank", last_name="username")),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -42,8 +42,8 @@ class UserAuthClass(TestSetUp):
     def test_username_has_space(self):
         """Tests error raised when username contains spaces."""
         response = self.app.post("/api/v2/auth/register",
-                                 data=json.dumps(dict(username="firt last",
-                                                      password="testpass")),
+                                 data=json.dumps(dict(username="first last",
+                                                      password="testpass", first_name="first", last_name="last")),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -53,7 +53,7 @@ class UserAuthClass(TestSetUp):
         """Tests error raised when username has less then 3 characters."""
         response = self.app.post("/api/v2/auth/register",
                                  data=json.dumps(dict(username="am",
-                                                      password="testpass")),
+                                                      password="testpass", first_name="first", last_name="last")),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -63,7 +63,7 @@ class UserAuthClass(TestSetUp):
         """Tests error raised when password is missing."""
         response = self.app.post("/api/v2/auth/register",
                                  data=json.dumps(dict(username="testusername",
-                                                      password="")),
+                                                      password="", first_name="first", last_name="last")),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -73,7 +73,7 @@ class UserAuthClass(TestSetUp):
         """Tests error raised when wrong username format is provided."""
         response = self.app.post("/api/v2/auth/register",
                                  data=json.dumps(dict(username=1234,
-                                                      password="testpass")),
+                                                      password="testpass", first_name="first", last_name="last")),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -85,7 +85,7 @@ class UserAuthClass(TestSetUp):
         """
         response = self.app.post("/api/v2/auth/register",
                                  data=json.dumps(dict(username="testuser",
-                                                      password="password")),
+                                                      password="password", first_name="first", last_name="last")),
                                  content_type="application/json")
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
@@ -151,7 +151,7 @@ class UserAuthClass(TestSetUp):
             data=json.dumps(
                 dict(
                     username="testreset",
-                    password="pass")),
+                    password="pass", first_name="first", last_name="last")),
             headers={
                 "content-type": "application/json"})
 

@@ -50,11 +50,19 @@ def create_user():
     data = request.get_json()
     if validate_user(data):
         return validate_user(data)
-    new_user = User(
-        username=data['username'],
-        password=data['password'],
-        first_name=data['first_name'],
-        last_name=data['last_name'])
+    if 'admin' not in data:
+        new_user = User(
+            username=data['username'],
+            password=data['password'],
+            first_name=data['first_name'],
+            last_name=data['last_name'])
+    else:
+        new_user = User(
+            username=data['username'],
+            password=data['password'],
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            admin=data['admin'])
     # check for duplicates before creating the new user
     duplicate = User.query.filter_by(username=new_user.username).first()
     if not duplicate:
