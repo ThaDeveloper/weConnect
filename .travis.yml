@@ -7,7 +7,7 @@ install:
   - pip install -r requirements.txt
   - pip install coveralls
 env:
-  - DB=postgres
+  - DB=postgresql
   - FLASK_APP=run.py
  before_script:
   - psql -c 'create database weconnect_testing;' -U postgres
@@ -16,6 +16,11 @@ script:
   - nosetests --with-coverage --cover-package=src
   - coveralls
 branches:
+  except:
+  - master
+  - challenge2
+  - dev
+  - challenge1
   only:
   - challenge3
 after_success:
