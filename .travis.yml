@@ -6,12 +6,10 @@ services:
 install:
   - pip install -r requirements.txt
   - pip install coveralls
-env:
-  - DB=postgresql
-  - FLASK_APP=run.py
- before_script:
+before_script:
   - psql -c 'create database weconnect_testing;' -U postgres
-  - flask db upgrade
+  - psql -c 'create database weconnect_development' -U postgres
+  - python manage.py db upgrade
 script: 
   - nosetests --with-coverage --cover-package=src
   - coveralls
