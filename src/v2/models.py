@@ -4,6 +4,7 @@ import uuid
 from src.utils import ValidationError
 from flask import request
 
+
 class User(db.Model):
     """Create users table
     One-to-Many relationship with review and business
@@ -16,6 +17,8 @@ class User(db.Model):
     public_id = db.Column(db.String(50), unique=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
+    first_name = db.Column(db.String(50),nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
     admin = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(
@@ -34,7 +37,7 @@ class User(db.Model):
         cascade='all, delete-orphan'
     )
 
-    def __init__(self, username, password, admin=False):
+    def __init__(self, username, password, first_name, last_name, admin=False):
         """Initialize a user instance
         usernames are stripped off any spaces and case set to lower
         Passwords are encrypted before saving to db
@@ -42,6 +45,8 @@ class User(db.Model):
         """
         self.username = username.strip()
         self.password = generate_password_hash(password, method='sha256')
+        self.first_name = first_name.strip().replace(" ","").title()
+        self.last_name = last_name.strip().replace(" ","").title()
         self.public_id = str(uuid.uuid4())
         self.admin = admin
 
@@ -105,7 +110,7 @@ class Business(db.Model):
         except KeyError as e:
             raise ValidationError("Invalid: Field required: " + e.args[0])
         return self
-    
+
     def search(self, params):
         """Search by name and filter by category and location"""
         page = params['page']
@@ -134,8 +139,11 @@ class Business(db.Model):
                 ).paginate(page, limit, error_out=False).items
             if category and location:
                 return self.query.filter(
-                    Business.category == category, Business.location == location
-                ).paginate(page, limit, error_out=False).items
+                    Business.category == category,
+                    Business.location == location).paginate(
+                    page,
+                    limit,
+                    error_out=False).items
             if query and location and not category:
                 return self.query.filter(
                     Business.location == location,
@@ -153,9 +161,8 @@ class Business(db.Model):
                     Business.name.ilike('%' + query + '%')
                 ).paginate(page, limit, error_out=False).items
         return self.query.order_by(
-                Business.created_at.desc()).paginate(
-                page, limit, error_out=False).items
-       
+            Business.created_at.desc()).paginate(
+            page, limit, error_out=False).items
 
 
 class Review(db.Model):

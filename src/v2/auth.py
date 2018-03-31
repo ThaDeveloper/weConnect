@@ -50,13 +50,11 @@ def create_user():
     data = request.get_json()
     if validate_user(data):
         return validate_user(data)
-    if 'admin' not in data:
-        new_user = User(username=data['username'], password=data['password'])
-    else:
-        new_user = User(
-            username=data['username'],
-            password=data['password'],
-            admin=data['admin'])
+    new_user = User(
+        username=data['username'],
+        password=data['password'],
+        first_name=data['first_name'],
+        last_name=data['last_name'])
     # check for duplicates before creating the new user
     duplicate = User.query.filter_by(username=new_user.username).first()
     if not duplicate:
@@ -78,6 +76,8 @@ def get_all_users(current_user):
                     'id': user.id,
                     'username': user.username,
                     'password': user.password,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
                     'admin': user.admin,
                     'created_at': user.created_at,
                     'updated_at': user.updated_at
@@ -93,14 +93,16 @@ def get_user(current_user, id):
     user = User.query.filter_by(id=id).first()
     if not user:
         return jsonify({'Message': 'User not found'}), 404
-    if not current_user.admin or not current_user.id == id:
+    if not current_user.admin and not current_user.id == user.id:
         return jsonify({'Message': "Cannot perform that action"}), 401
     return jsonify({
-        'Users': [
+        'User': [
             {
                 'id': user.id,
                 'username': user.username,
                 'password': user.password,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
                 'admin': user.admin,
                 'created_at': user.created_at,
                 'updated_at': user.updated_at
@@ -193,7 +195,7 @@ def read_user_businesses(id):
                     'description': business.description,
                     'location': business.location,
                     'category': business.category,
-                    'owner': business.owner.username,
+                    'owner': business.owner.first_name + ' ' + business.owner.last_name,
                     'created_at': business.created_at,
                     'updated_at': business.updated_at
                 } for business in user.businesses

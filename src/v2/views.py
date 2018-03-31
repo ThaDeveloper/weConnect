@@ -53,7 +53,7 @@ def get_one_business(id):
                 'description': business.description,
                 'location': business.location,
                 'category': business.category,
-                'owner': business.owner.username,
+                'owner': business.owner.first_name + ' ' + business.owner.last_name,
                 'created_at': business.created_at,
                 'updated_at': business.updated_at
             }
@@ -63,7 +63,7 @@ def get_one_business(id):
 
 @biz.route('/businesses/', methods=['GET'])
 def get_all_businesses():
-     
+
     params = {
         'page': request.args.get('page', default=1, type=int),
         'limit': request.args.get('limit', default=5, type=int),
@@ -81,7 +81,7 @@ def get_all_businesses():
                     'description': business.description,
                     'location': business.location,
                     'category': business.category,
-                    'owner': business.owner.username,
+                    'owner': business.owner.first_name + ' ' + business.owner.last_name,
                     'created_at': business.created_at,
                     'updated_at': business.updated_at
                 } for business in businesses
