@@ -3,6 +3,5 @@ __pycache__/
 .pytest_cache/
 .coverage
 .env
-migrations/
 freezee
 .cache/
