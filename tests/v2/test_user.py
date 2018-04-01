@@ -337,7 +337,7 @@ class UserAuthClass(TestSetUp):
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("Cannot perform", response_msg["Message"])
 
-    def test_read_user_business(self):
+    def test_read_user_businesses(self):
         """Tests user can read the businesses of a particular user"""
         response = self.app.get(
             '/api/v2/auth/users/{}/businesses'.format(

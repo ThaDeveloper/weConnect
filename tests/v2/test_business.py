@@ -20,6 +20,13 @@ class TestBusinessClassFunctionality(TestSetUp):
                                  headers={"x-access-token": "Wrong token"})
         self.assertEqual(response.status_code, 401)
 
+    def test_business_access_with_mising_token(self):
+        """Raise unauthorized error missing token."""
+        response = self.app.post("/api/v2/businesses",
+                                 data=json.dumps(self.business),
+                                 content_type="application/json")
+        self.assertEqual(response.status_code, 401)
+
     def test_add_new_business(self):
         """Tests creating a new business."""
         response = self.app.post('/api/v2/businesses',

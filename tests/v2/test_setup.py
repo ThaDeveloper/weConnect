@@ -134,8 +134,6 @@ class TestSetUp(unittest.TestCase):
 
     def tearDown(self):
         """Drops the db."""
-        # db.session.remove()
-        # db.drop_all()
         db.session.query(Review).delete()
         db.session.commit()
         db.session.query(Business).delete()
