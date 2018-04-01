@@ -1,7 +1,7 @@
 import os
 import sys
 import inspect
-from flask import Flask, request, jsonify, session, Blueprint
+from flask import request, jsonify, session, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import datetime
@@ -161,7 +161,6 @@ def login():
                             datetime.timedelta(minutes=30)},
                            os.getenv('SECRET'))
         tokens[user.public_id] = token
-        # user_object.u_token[user['username']] = token
         return jsonify({"token": token.decode('UTF-8')}), 200
     return jsonify({"Message": "login invalid!"}), 401
 

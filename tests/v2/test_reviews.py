@@ -45,20 +45,30 @@ class TestReviewsClassFunctionality(TestSetUp):
 
     def test_missing_title(self):
         """Tests error raised for misisng review title."""
-        response = self.app.post("/api/v2/businesses/{}/reviews".format(Business.query.order_by(Business.created_at).first().id),
-                                 data=json.dumps(dict(title="",
-                                                      message="Low pay")),
-                                 content_type="application/json",
-                                 headers={"x-access-token": self.token})
+        response = self.app.post(
+            "/api/v2/businesses/{}/reviews".format(
+                Business.query.order_by(
+                    Business.created_at).first().id),
+            data=json.dumps(
+                dict(
+                    title="",
+                    message="Low pay")),
+            content_type="application/json",
+            headers={
+                "x-access-token": self.token})
         self.assertEqual(response.status_code, 400)
         response_msg = json.loads(response.data.decode("UTF-8"))
         self.assertIn("must have", response_msg["Message"])
 
     def test_get_all_business_reviews(self):
         """Tests listing all reviews for a single business."""
-        response = self.app.get("/api/v2/businesses/{}/reviews".format(Business.query.order_by(Business.created_at).first().id),
-                                content_type="application/json",
-                                headers={"x-access-token": self.token})
+        response = self.app.get(
+            "/api/v2/businesses/{}/reviews".format(
+                Business.query.order_by(
+                    Business.created_at).first().id),
+            content_type="application/json",
+            headers={
+                "x-access-token": self.token})
         self.assertEqual(response.status_code, 200)
 
     def test_get_reviews_for_missing_business(self):

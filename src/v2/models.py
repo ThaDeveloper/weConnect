@@ -1,8 +1,7 @@
 from src import db
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 import uuid
 from src.utils import ValidationError
-from flask import request
 
 
 class User(db.Model):
@@ -17,7 +16,7 @@ class User(db.Model):
     public_id = db.Column(db.String(50), unique=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
-    first_name = db.Column(db.String(50),nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     admin = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -45,8 +44,8 @@ class User(db.Model):
         """
         self.username = username.strip()
         self.password = generate_password_hash(password, method='sha256')
-        self.first_name = first_name.strip().replace(" ","").title()
-        self.last_name = last_name.strip().replace(" ","").title()
+        self.first_name = first_name.strip().replace(" ", "").title()
+        self.last_name = last_name.strip().replace(" ", "").title()
         self.public_id = str(uuid.uuid4())
         self.admin = admin
 

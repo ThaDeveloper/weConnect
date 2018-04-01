@@ -9,7 +9,6 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from src import app, db
 from src.v2.models import User, Business, Review
-from config import Testing
 
 
 class TestSetUp(unittest.TestCase):
@@ -19,8 +18,16 @@ class TestSetUp(unittest.TestCase):
         app.config.from_object('config.Testing')
         self.app = app.test_client()
         db.create_all()
-        self.user = {"username": "testuser", "password": "testpass", "first_name": "Test", "last_name": "User"}
-        self.unknownuser = {"username": "unkownuser", "password": "password", "first_name":"Unkown", "last_name": "User"}
+        self.user = {
+            "username": "testuser",
+            "password": "testpass",
+            "first_name": "Test",
+            "last_name": "User"}
+        self.unknownuser = {
+            "username": "unkownuser",
+            "password": "password",
+            "first_name": "Unkown",
+            "last_name": "User"}
         self.admin = {
             "username": "testadmin",
             "password": "password",
@@ -71,9 +78,17 @@ class TestSetUp(unittest.TestCase):
         self.data = json.loads(self.adminlogin.get_data(as_text=True))
         self.admintoken = self.data['token']
 
-        self.app.post('/api/v2/businesses', data=json.dumps(dict(name="testclient", description="This is just for setup", location="testing", category="unittest")),
-                      content_type="application/json",
-                      headers={"x-access-token": self.token})
+        self.app.post(
+            '/api/v2/businesses',
+            data=json.dumps(
+                dict(
+                    name="testclient",
+                    description="This is just for setup",
+                    location="testing",
+                    category="unittest")),
+            content_type="application/json",
+            headers={
+                "x-access-token": self.token})
         business = {
             "name": "Andela Kenya",
             "description": "Become world class",
@@ -107,7 +122,8 @@ class TestSetUp(unittest.TestCase):
                   "message": "Its a great place to grow"}
         test_review = Review()
         test_review.import_data(review)
-        test_review.business_id = Business.query.order_by(Business.created_at).first().id
+        test_review.business_id = Business.query.order_by(
+            Business.created_at).first().id
         test_review.user_id = User.query.order_by(User.created_at).first().id
 
         db.session.add(test_business)

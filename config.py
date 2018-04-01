@@ -13,7 +13,7 @@ class Development(BaseConfig):
     """docstring for Development"""
     DEBUG = True
     TESTING = True
-    
+
 
 class Testing(BaseConfig):
     """docstring for Testing"""
