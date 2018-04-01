@@ -1,7 +1,7 @@
 # weConnect
 
-[![Build Status](https://travis-ci.org/ThaDeveloper/weConnect.svg?branch=challenge2)](https://travis-ci.org/ThaDeveloper/weConnect)
-[![Coverage Status](https://coveralls.io/repos/github/ThaDeveloper/weConnect/badge.svg?branch=challenge2)](https://coveralls.io/github/ThaDeveloper/weConnect?branch=challenge2)
+[![Build Status](https://travis-ci.org/ThaDeveloper/weConnect.svg?branch=challenge3)](https://travis-ci.org/ThaDeveloper/weConnect)
+[![Coverage Status](https://coveralls.io/repos/github/ThaDeveloper/weConnect/badge.svg?branch=challenge2)](https://coveralls.io/github/ThaDeveloper/weConnect?branch=challenge3)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/cfc7addc7b1b4fbc90574ab6f4192dde)](https://www.codacy.com/app/ThaDeveloper/weConnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThaDeveloper/weConnect&amp;utm_campaign=Badge_Grade)
 
 A platform that provides a platform that brings businesses and individuals together.
@@ -52,7 +52,6 @@ Ensure you have bootstrap 3.3.7 or later.( Can download or use available CDNs.Re
 ### Mobile version
 
 ![alt text](https://github.com/ThaDeveloper/weConnect/blob/challenge1/designs/documentation/snapshots/mobile_version.png "Mobile version")
-bile_version.png "Mobile version")
 
 
 ## Run the API
@@ -62,31 +61,43 @@ bile_version.png "Mobile version")
 
 ### Installation
 1. Create a [virtual environment](http://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv)
-`$ virtualenv envname` and then `$ source envname/bin/activate`
+ `$ virtualenv envname` and then `$ source envname/bin/activate`
 
-On the weConnect directory
-2. Install project dependencies
-`$ pip install -r requirements.txt`
+2. On the weConnect directory install project dependencies
 
-Finally run `$ flask run`
+ `$ pip install -r requirements.txt`
+
+3. Create a pg database and set the DATABASE URI for the same in enviroment variables and export them with `$ source .env`. Then
+  update migrations
+  `$ python3 manage.py db upgrade`
+
+4. Finally run `$ flask run`
 
 ### Testing
 Run command 
-`$ pytest`
+ `$ pytest`
 
 ### API Endpoints
 #### To note
 - User needs to be logged in to: Register, update or remove business and also to give reviews
 1. Users 
-- `POST /api/v1/auth/register` Creates user account
-- `POST /api/v1/auth/login` Log in user
-- `POST /api/v1/auth/logout` Logout user
-- `PUT /api/v1/auth/reset-password` Resets user password
+- `POST /api/v1/auth/register` - Creates user account
+- `POST /api/v1/auth/login` - Log in user
+- `POST /api/v1/auth/logout` - Logout user
+- `PUT /api/v1/auth/reset-password` - Reset user password
+*- New in version 2*
+- `GET /api/v2/users/<id>/businesses` - Get all user businesses
 2. Businesses
-- `POST /api/v1/businesses` Register new business
-- `GET /api/v1/businesses` List all available businesses
-- `PUT /api/v1/businesses/<business_id>` Update business 
-- `DELETE /api/v1/businesses/<business_id>` Remove business
+- `POST /api/v1/businesses` - Register new business
+- `GET /api/v1/businesses` - List all available businesses
+- `PUT /api/v1/businesses/<business_id>` - Update business 
+- `DELETE /api/v1/businesses/<business_id>` -  Remove business
+*New in Version 2*
+- `GET /api/v2/businesses/?q=<query>` - Search a business
+- `GET /api/v2/businesses/?q=<query>&category=<category>` - Search business in a specific category
+- `GET /api/v2/businesses/?q=<query>&location=<location>` - Search business in specific location
+- `GET /api/v2/businesses/?location=<location>&category=<category>` - Filter businesses
+- `GET /api/v2/businesses/?page=3&limit=5` - Pagination and page limit
 3. Reviews
 - `POST /api/v1/businesses/<business_id>/reviews` Review a business
 - `GET /api/v1/businesses/<business_id>/reviews` Get business' reviews
