@@ -9,7 +9,7 @@ sys.path.insert(0, parentdir)
 from src.v2.models import Business, Review, ValidationError
 from src.v2.auth import token_required
 
-biz = Blueprint('business', __name__)
+biz = Blueprint('v2_business', __name__)
 
 
 @biz.route('/businesses', methods=['POST'])

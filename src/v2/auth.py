@@ -13,7 +13,7 @@ sys.path.insert(0, parentdir)
 from src.v2.models import User
 from src.utils import validate_user
 
-auth = Blueprint('user', __name__)
+auth = Blueprint('v2_user', __name__)
 tokens = {}
 
 
