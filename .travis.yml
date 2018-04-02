@@ -20,6 +20,7 @@ branches:
   - dev
   - challenge1
   only:
+  - versions
   - challenge3
 after_success:
  - coveralls
