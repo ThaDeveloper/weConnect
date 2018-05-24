@@ -152,7 +152,7 @@ def create_review(current_user, id):
 
 
 @biz.route('/businesses/<int:id>/reviews', methods=['GET'])
-def get_business_reviews(current_user, id):
+def get_business_reviews(id):
     """List all business' reviews"""
     business = Business.query.filter_by(id=id).first()
     if not business:
